@@ -122,8 +122,9 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         <div class="field"><label>טלפון</label><input id="phone"></div>
         <div class="field"><label>טלפון נייד</label><input id="mobile"></div>
       </div>
-      <div class="field-grid g3" style="margin-bottom:12px">
+      <div class="field-grid g4" style="margin-bottom:12px">
         <div class="field"><label>רחוב / שכונה</label><input id="street"></div>
+        <div class="field"><label>מספר</label><input id="streetNum" maxlength="4"></div>
         <div class="field"><label>עיר / ישוב</label><input id="city"></div>
         <div class="field"><label>מיקוד</label><input id="zip" maxlength="7"></div>
       </div>
@@ -650,6 +651,8 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   const cityVal   = document.getElementById('city').value || '';
   const zipVal    = document.getElementById('zip').value || '';
   hebC(streetVal, C.addr.street_x, C.addr.cy);
+  const streetNumEl = document.getElementById('streetNum');
+  if (streetNumEl && streetNumEl.value) numC(streetNumEl.value, 213.0, C.addr.cy);
   hebC(cityVal,   C.addr.city_x,   C.addr.cy);
   spacedFwd(zipVal, C.addr.zip_xs, C.addr.cy);
 
@@ -663,7 +666,7 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   if (C.cb.marital[marital]) chk(...C.cb.marital[marital]);
 
   // תושב ישראל
-  const resident = getRadio('resident');
+  const resident = getRadio('resident') || 'yes';
   if (resident === 'yes') chk(...C.cb.resident_yes);
   if (resident === 'no')  chk(...C.cb.resident_no);
 
@@ -696,7 +699,32 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   doc.addPage();
   doc.addImage(FORM_P2, 'JPEG', 0, 0, PW, PH);
 
-  // תושב ישראל
+  // ח. פטורים — map exemption IDs to page2 checkbox positions
+  const exemptionMap = {
+    e1:  [510.7, 39.3],  e2a: [510.7, 54.6],  e2b: [510.7, 77.1],
+    e3:  [510.7, 94.8],  e4:  [511.7,121.5],  e5:  [510.7,160.9],
+    e6:  [510.7,183.3],  e7:  [510.7,206.9],  e8:  [510.7,265.4],
+    e9:  [510.7,314.9],  e10: [510.7,332.9],  e11: [510.6,357.8],
+    e12: [510.7,380.6],  e13: [510.7,397.0],  e14: [510.7,414.0],
+    e15: [510.7,438.0],  e16: [510.7,452.0],
+  };
+  Object.keys(exemptionMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.checked) chk(...exemptionMap[id]);
+  });
+
+  // ט. תיאום מס checkboxes
+  const taxCoordMap = {
+    taxReason1: [512.4, 508.3],
+    taxReason2: [512.4, 522.0],
+    taxReason3: [512.4, 536.0],
+  };
+  Object.keys(taxCoordMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.checked) chk(...taxCoordMap[id]);
+  });
+
+  // תושב ישראל section 1 on page 2
   chk(...C.p2.resident_yes);
 
   // תאריך חתימה
