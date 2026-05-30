@@ -600,7 +600,7 @@ async function generatePdfBase64(firstName, lastName, idNum) {
       gender_female:  [528.4, 292.1],
       marital: {
         single:   [489.3, 277.8], married:  [430.2, 277.8],
-        divorced: [362.9, 277.8], widowed:  [309.7, 277.8]
+        divorced: [362.9, 277.8], widowed:  [309.7, 278.8]
       },
       resident_yes: [270.6, 279.0], resident_no: [248.6, 279.9],
       kupah:        [123.2, 277.2]
@@ -617,7 +617,7 @@ async function generatePdfBase64(firstName, lastName, idNum) {
       partial_salary: [238.2,383.0], daily_wage:     [238.2,395.0],
       pension:        [238.2,407.0], scholarship:    [238.2,419.0]
     },
-    work: { cy: 384.8, xs: [34.4,45.7,57.0,68.3,79.7,91.0,102.3,113.6] },
+    work: { cy: 384.8, xs: [35.4,46.7,58.0,69.3,80.7,92.0,103.3,114.6] },
     p2: {
       resident_yes: [510.7, 39.3],
       sign_cy: 649.0,
@@ -687,7 +687,12 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   setNum();
   doc.text(email, ...mm(C.phone.email_x, C.phone.email_cy));
 
-  // סוג הכנסה
+  // ה. הכנסות אחרות radio
+  const otherIncome = getRadio('otherIncome');
+  if (otherIncome === 'no')  chk(236.5, 453.8);
+  if (otherIncome === 'yes') chk(236.5, 478.2);
+
+  // ד. סוג הכנסה
   const incomeType = getRadio('incomeType');
   if (C.income[incomeType]) chk(...C.income[incomeType]);
 
@@ -715,9 +720,9 @@ async function generatePdfBase64(firstName, lastName, idNum) {
 
   // ט. תיאום מס checkboxes
   const taxCoordMap = {
-    taxReason1: [512.4, 508.3],
-    taxReason2: [512.4, 522.0],
-    taxReason3: [512.4, 536.0],
+    taxReason1: [512.4, 479.4],
+    taxReason2: [512.4, 508.3],
+    taxReason3: [512.4, 537.0],
   };
   Object.keys(taxCoordMap).forEach(id => {
     const el = document.getElementById(id);
@@ -733,8 +738,7 @@ async function generatePdfBase64(firstName, lastName, idNum) {
     if (i < C.p2.sign_xs.length) numC(c, C.p2.sign_xs[i], C.p2.sign_cy);
   });
 
-  // שם מלא
-  hebC(`${fn} ${ln}`, C.p2.name_x, C.p2.sign_cy);
+  // שם מלא ← לא מוסיפים, העובד חותם ידנית
 
   return doc.output('datauristring').split(',')[1];
 }
