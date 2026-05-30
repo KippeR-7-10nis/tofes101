@@ -477,15 +477,17 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
  
   // Register David font
-  doc.addFileToVFS('David.ttf', DAVID_FONT_B64);
-  doc.addFont('David.ttf', 'David', 'normal');
+  if(DAVID_FONT_B64) {
+    doc.addFileToVFS('David.ttf', DAVID_FONT_B64);
+    doc.addFont('David.ttf', 'David', 'normal');
+  }
  
   const COL = [13, 26, 69]; // dark navy
  
   // ── Drawing helpers ──────────────────────────────────────────────────────
  
   function setHeb(size) {
-    doc.setFont('David', 'normal');
+    doc.setFont(DAVID_FONT_B64 ? 'David' : 'helvetica', 'normal');
     doc.setFontSize(size || 9);
     doc.setTextColor(COL[0], COL[1], COL[2]);
   }
