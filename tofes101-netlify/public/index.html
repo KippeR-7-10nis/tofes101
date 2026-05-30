@@ -154,7 +154,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         </div>
         <div class="field"><label>תושב ישראל</label>
           <div class="radio-group">
-            <label class="radio-opt"><input type="radio" name="resident" value="yes" checked> כן</label>
+            <label class="radio-opt"><input type="radio" name="resident" value="yes"> כן</label>
             <label class="radio-opt"><input type="radio" name="resident" value="no"> לא</label>
           </div>
         </div>
@@ -666,7 +666,7 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   if (C.cb.marital[marital]) chk(...C.cb.marital[marital]);
 
   // תושב ישראל
-  const resident = getRadio('resident') || 'yes';
+  const resident = getRadio('resident');
   if (resident === 'yes') chk(...C.cb.resident_yes);
   if (resident === 'no')  chk(...C.cb.resident_no);
 
