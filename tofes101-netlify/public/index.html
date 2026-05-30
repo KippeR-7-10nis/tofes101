@@ -722,12 +722,36 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   const taxCoordMap = {
     taxReason1: [512.4, 479.4],
     taxReason2: [512.4, 508.3],
-    taxReason3: [512.4, 537.0],
+    taxReason3: [512.4, 588.7],
   };
   Object.keys(taxCoordMap).forEach(id => {
     const el = document.getElementById(id);
     if (el && el.checked) chk(...taxCoordMap[id]);
   });
+
+  // ט. תיאום מס table rows (when taxReason2 checked)
+  const taxReason2El = document.getElementById('taxReason2');
+  if (taxReason2El && taxReason2El.checked) {
+    const TAX_ROWS = [548, 562, 576];
+    const TAX_COLS = {
+      name_x: 490, addr_x: 400, taxfile_x: 275,
+      type_x: 200, income_x: 130, withheld_x: 60
+    };
+    const taxEmpRows = document.querySelectorAll('#taxEmployersBody tr');
+    taxEmpRows.forEach((row, i) => {
+      if (i >= TAX_ROWS.length) return;
+      const cy = TAX_ROWS[i];
+      const cells = row.querySelectorAll('input');
+      const vals = [...cells].map(c => c.value || '');
+      const [name, addr, taxfile, type, income, withheld] = vals;
+      if (name) hebC(name, TAX_COLS.name_x, cy);
+      if (addr) hebC(addr, TAX_COLS.addr_x, cy);
+      if (taxfile) numC(taxfile, TAX_COLS.taxfile_x, cy);
+      if (type) hebC(type, TAX_COLS.type_x, cy);
+      if (income) numC(income, TAX_COLS.income_x, cy);
+      if (withheld) numC(withheld, TAX_COLS.withheld_x, cy);
+    });
+  }
 
   // תושב ישראל section 1 on page 2
   chk(...C.p2.resident_yes);
