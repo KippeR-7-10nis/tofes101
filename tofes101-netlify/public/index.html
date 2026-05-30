@@ -89,12 +89,12 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
   </div>
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   <div class="form-body">
-
+ 
     <div class="section">
       <div class="year-badge" id="yearNote"></div>
       <p style="font-size:13px;color:#666;line-height:1.6">טופס זה ימולא על-ידי כל עובד עם תחילת עבודתו. אם חל שינוי בפרטים – יש להצהיר על כך תוך שבוע ימים.</p>
     </div>
-
+ 
     <!-- א -->
     <div class="section">
       <div class="section-header"><div class="section-letter">א</div><div><div class="section-title">פרטי המעסיק</div><div class="section-subtitle">ממולא מראש</div></div></div>
@@ -105,7 +105,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         <div class="field"><label>תיק ניכויים</label><input id="empTax" value="926371428" readonly></div>
       </div>
     </div>
-
+ 
     <!-- ב -->
     <div class="section">
       <div class="section-header"><div class="section-letter">ב</div><div><div class="section-title">פרטי העובד/ת</div><div class="section-subtitle">יש לצרף צילום תעודת זהות</div></div></div>
@@ -158,7 +158,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         </div>
       </div>
     </div>
-
+ 
     <!-- ג -->
     <div class="section">
       <div class="section-header"><div class="section-letter">ג</div><div><div class="section-title">פרטים על ילדיי שבשנת המס טרם מלאו להם 19 שנה</div></div></div>
@@ -168,7 +168,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
       </table>
       <button class="add-row-btn" onclick="addChild()">+ הוסף ילד</button>
     </div>
-
+ 
     <!-- ד -->
     <div class="section" id="sectionD">
       <div class="section-header"><div class="section-letter">ד</div><div><div class="section-title">פרטים על הכנסותיי ממעסיק זה</div><div class="section-subtitle" style="color:#c0392b;font-weight:500">* חובה</div></div></div>
@@ -181,7 +181,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         <input id="workStart" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this); clearValidation()">
       </div>
     </div>
-
+ 
     <!-- ה -->
     <div class="section">
       <div class="section-header"><div class="section-letter">ה</div><div><div class="section-title">פרטים על הכנסות אחרות</div></div></div>
@@ -198,7 +198,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         <label class="cb-opt" id="cbNoPension"><input type="checkbox" id="noPensionOther"> <span class="ex-num">10</span> אין הפרשות לקצבה/אובדן כושר</label>
       </div>
     </div>
-
+ 
     <!-- ו -->
     <div class="section">
       <div class="section-header"><div class="section-letter">ו</div><div><div class="section-title">פרטים על בן/בת הזוג</div></div></div>
@@ -216,7 +216,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         </div>
       </div>
     </div>
-
+ 
     <!-- ז -->
     <div class="section">
       <div class="section-header"><div class="section-letter">ז</div><div><div class="section-title">שינויים במהלך השנה</div></div></div>
@@ -226,13 +226,13 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
       </table>
       <button class="add-row-btn" onclick="addChange()">+ הוסף שינוי</button>
     </div>
-
+ 
     <!-- ח -->
     <div class="section">
       <div class="section-header"><div class="section-letter">ח</div><div><div class="section-title">אני מבקש/ת פטור או זיכוי ממס</div></div></div>
       <div class="ex-grid" id="exemptionsGrid"></div>
     </div>
-
+ 
     <!-- ט -->
     <div class="section">
       <div class="section-header"><div class="section-letter">ט</div><div><div class="section-title">אני מבקש/ת תיאום מס</div></div></div>
@@ -249,7 +249,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         <button class="add-row-btn" onclick="addTaxEmployer()">+ הוסף מעסיק</button>
       </div>
     </div>
-
+ 
     <!-- י -->
     <div class="section">
       <div class="section-header"><div class="section-letter">י</div><div><div class="section-title">הצהרה וחתימה</div></div></div>
@@ -263,9 +263,9 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
       </div>
       <div class="note-box" style="margin-top:14px"><strong>שימו לב:</strong> לחיצה על "שלח טופס" תייצר PDF ותעלה אותו למערכת. תישלח הודעה אוטומטית ל-kippstar@gmail.com.</div>
     </div>
-
+ 
   </div><!-- form-body -->
-
+ 
   <div class="action-bar">
     <button class="btn-primary" id="sendBtn" onclick="handleSend()">📨 שלח טופס</button>
     <div id="statusMsg"></div>
@@ -273,12 +273,12 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
   </div>
 </div>
 </div>
-
+ 
 <script>
 const CURRENT_YEAR = new Date().getFullYear();
 document.getElementById('yearBadge').textContent = CURRENT_YEAR;
 document.getElementById('yearNote').textContent = `לפי תקנות מס הכנסה (ניכוי ממשכורת ומשכר עבודה), התשנ"ג – 1993`;
-
+ 
 // Auto-fill sign name
 ['firstName','lastName'].forEach(id => {
   document.getElementById(id).addEventListener('input', () => {
@@ -286,12 +286,12 @@ document.getElementById('yearNote').textContent = `לפי תקנות מס הכנ
       (document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value).trim();
   });
 });
-
+ 
 // Today's date
 const t = new Date();
 document.getElementById('signDate').value =
   String(t.getDate()).padStart(2,'0') + '/' + String(t.getMonth()+1).padStart(2,'0') + '/' + t.getFullYear();
-
+ 
 // Date format helper
 function formatDateInput(el) {
   let raw = el.value.replace(/\D/g,'');
@@ -299,10 +299,10 @@ function formatDateInput(el) {
   else if(raw.length > 4) el.value = raw.slice(0,2) + '/' + raw.slice(2,4) + '/' + raw.slice(4,8);
   else el.value = raw;
 }
-
+ 
 function fmtDate(d) { return d || '—'; }
 function getRadio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; }
-
+ 
 // Income types
 const incomeTypes = [
   {val:'monthly_salary', label:'משכורת חודש'},
@@ -313,7 +313,7 @@ const incomeTypes = [
   {val:'scholarship', label:'מלגה'},
 ];
 const iL = {monthly_salary:'משכורת חודש',extra_position:'משרה נוספת',partial_salary:'משכורת חלקית',daily_wage:'שכר עובד יומי',pension:'קצבה',scholarship:'מלגה'};
-
+ 
 function buildIncomeGrid(containerId, name) {
   const grid = document.getElementById(containerId);
   grid.innerHTML = incomeTypes.map(t =>
@@ -324,14 +324,14 @@ function buildIncomeGrid(containerId, name) {
 }
 buildIncomeGrid('incomeTypeGrid','incomeType');
 buildIncomeGrid('otherIncomeTypeGrid','otherIncomeType');
-
+ 
 function updateCbClass(name, val, containerId) {
   document.querySelectorAll(`#${containerId} .cb-opt`).forEach(el => el.classList.remove('checked'));
   const sel = document.querySelector(`input[name="${name}"][value="${val}"]`);
   if(sel) sel.closest('.cb-opt').classList.add('checked');
   clearValidation();
 }
-
+ 
 // Children
 let childrenCount = 0;
 function addChild() {
@@ -348,7 +348,7 @@ function addChild() {
   document.getElementById('childrenBody').appendChild(tr);
 }
 addChild();
-
+ 
 // Changes
 let changesCount = 0;
 function addChange() {
@@ -362,7 +362,7 @@ function addChange() {
   document.getElementById('changesBody').appendChild(tr);
 }
 addChange();
-
+ 
 // Exemptions
 const exemptions = [
   {id:'e1',num:'1',label:'אני תושב/ת ישראל'},
@@ -390,7 +390,7 @@ exemptions.forEach(ex => {
   lbl.innerHTML = `<input type="checkbox" id="${ex.id}" onchange="document.getElementById('exItem_${ex.id}').classList.toggle('checked',this.checked)"> <span class="ex-num">${ex.num}</span> ${ex.label}`;
   exGrid.appendChild(lbl);
 });
-
+ 
 // Tax coord employers
 let taxEmpCount = 0;
 function addTaxEmployer() {
@@ -405,28 +405,28 @@ function addTaxEmployer() {
     <td><input id="te_wth${i}" placeholder="₪"></td>`;
   document.getElementById('taxEmployersBody').appendChild(tr);
 }
-
+ 
 function toggleTaxEmployers() {
   document.getElementById('taxEmployersSection').style.display =
     document.getElementById('taxReason2').checked ? 'block' : 'none';
   if(document.getElementById('taxReason2').checked && taxEmpCount === 0) addTaxEmployer();
 }
-
+ 
 function toggleOtherIncome() {
   document.getElementById('otherIncomeDetails').style.display =
     document.querySelector('input[name="otherIncome"]:checked').value === 'yes' ? 'flex' : 'none';
 }
-
+ 
 // Checkbox styles
 document.querySelectorAll('.cb-opt input[type=checkbox]').forEach(cb => {
   cb.addEventListener('change', () => cb.closest('.cb-opt').classList.toggle('checked', cb.checked));
 });
-
+ 
 function clearValidation() {
   document.getElementById('sectionD').classList.remove('mandatory-border');
   document.getElementById('statusMsg').innerHTML = '';
 }
-
+ 
 // Collect all form data for summary
 function buildFormSummary(firstName, lastName, id) {
   const mL = {single:'רווק/ה',married:'נשוי/אה',divorced:'גרוש/ה',widowed:'אלמן/ה'};
@@ -457,205 +457,257 @@ function buildFormSummary(firstName, lastName, id) {
   lines.push(`תאריך הגשה: ${document.getElementById('signDate').value}`);
   return lines.join('\n');
 }
-
-// ── PDF generation using exact coordinates on official form background ──
-// FORM_P1 loaded from form_p1.js
-// FORM_P2 loaded from form_p2.js
-
-// All coordinates calibrated from the official filled example
-const C = {
-  year:    { cy:93.4,  xs:[227.0,243.2,259.4,275.6] },
-  emp:     { cy:175.7 },
-  emp_name_chars: [
-    [508.88,'ד'],[505.61,'.'], [499.00,'ב'],[495.73,' '],[489.12,'ב'],
-    [485.41,'י'],[478.43,'ה'],[471.33,'ס'],[468.06,' '],[462.38,'ל'],
-    [455.39,'ט'],[451.43,'נ'],[447.72,'י'],[440.62,'ס']
-  ],
-  emp_addr_chars: [
-    [355.14,'ה'],[348.36,'א'],[344.65,'י'],[338.70,'ר'],[335.00,'ו'],
-    [327.89,'ס'],[324.19,'י'],[317.20,'ם'],[313.93,' '],[307.40,'2'],
-    [304.13,','],[300.86,' '],[296.89,'נ'],[289.79,'ס'],[286.52,' '],
-    [280.48,'צ'],[276.77,'י'],[273.07,'ו'],[269.11,'נ'],[262.12,'ה']
-  ],
-  emp_phone_chars: [
-    [135.11,'0'],[141.65,'5'],[148.19,'4'],[154.73,'-'],[158.64,'4'],
-    [165.18,'5'],[171.72,'3'],[178.26,'0'],[184.80,'7'],[191.33,'5'],[197.87,'6']
-  ],
-  emp_tax_chars: [
-    [31.69,'9'],[42.92,'2'],[54.15,'6'],[65.39,'3'],[76.62,'7'],
-    [87.85,'1'],[99.08,'4'],[110.32,'2'],[121.55,'8']
-  ],
-  name:  { cy:231.7, last_x:374.6, first_x:260.3,
-           id_xs:[531.7,520.5,509.3,498.1,487.0,475.8,464.6,453.4,442.3],
-           birth_xs:[202.0,190.8,179.7,168.5,157.3,146.2,135.0,123.9] },
-  addr:  { cy:253.0, street_x:309.0, num_x:213.7, city_x:153.7,
-           zip_xs:[33.6,44.7,55.9,67.1,78.3,89.5,100.6] },
-  cb: {
-    gender_male:[528.4,279.1], gender_female:[528.4,292.1],
-    marital:{ single:[489.3,277.8], married:[430.2,277.8], divorced:[362.9,277.8], widowed:[309.7,277.8] },
-    resident_yes:[270.6,279.0], resident_no:[248.6,279.9],
-    kupah:[123.2,277.2]
-  },
-  kupah_name: { x:49.5, cy:295.3 },
-  phone: { cy:321.0, mob_xs:[89.9,95.4,100.8,106.3,111.8,117.2,122.7,128.1,133.6,139.1],
-           ph_xs:[250.5,256.0,261.5,267.0,272.5,278.0,283.5,289.0,294.5,300.0],
-           email_x:380.4, email_cy:320.0 },
-  income: {
-    monthly_salary:[238.2,357.1], extra_position:[238.2,371.0],
-    partial_salary:[238.2,383.0], daily_wage:[238.2,395.0],
-    pension:[238.2,407.0], scholarship:[238.2,419.0]
-  },
-  work:  { cy:384.8, xs:[34.4,45.7,57.0,68.3,79.7,91.0,102.3,113.6] },
-  p2: {
-    resident_yes:[510.7,39.3],
-    sign_cy:649.0,
-    sign_xs:[157.3,163.2,169.1,172.0,177.9,183.8,186.8,192.6,198.5,204.4],
-    name_x:390.0
-  }
-};
-
-// PDF page dimensions in mm (A4)
-const PW = 210, PH = 297;
-// Source image in pixels
-const IW = 1241, IH = 1754;
-// Scale: mm per pixel
-const SX = PW/IW, SY = PH/IH;
-
-function mmX(pdfPt) { return pdfPt * SX; }    // PDF point x → mm
-function mmY(pdfPt) { return pdfPt * SY; }    // PDF point y (from top) → mm
-
+ 
+ 
+// ── Exact-coordinate PDF generation ────────────────────────────────────────
+// Form background images loaded from form_p1.js and form_p2.js
+// David font loaded from david_font.js
+ 
 async function generatePdfBase64(firstName, lastName, idNum) {
-  const { jsPDF } = window.jspdf || {};
-  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-  const R=0.05, G=0.1, B=0.35;
-
-  // ── Helper functions ──────────────────────────────────
-  function setHeb(size=9) {
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(size);
-    doc.setTextColor(Math.round(R*255), Math.round(G*255), Math.round(B*255));
+  const { jsPDF } = window.jspdf;
+  // A4 in mm
+  const PW = 210, PH = 297;
+  // Source PDF dimensions in points (595 x 842)
+  const SRC_W = 595.28, SRC_H = 841.89;
+  // Scale: mm per point
+  const SX = PW / SRC_W, SY = PH / SRC_H;
+ 
+  function mm(ptX, ptY) { return [ptX * SX, ptY * SY]; }
+ 
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+ 
+  // Register David font
+  doc.addFileToVFS('David.ttf', DAVID_FONT_B64);
+  doc.addFont('David.ttf', 'David', 'normal');
+ 
+  const COL = [13, 26, 69]; // dark navy
+ 
+  // ── Drawing helpers ──────────────────────────────────────────────────────
+ 
+  function setHeb(size) {
+    doc.setFont('David', 'normal');
+    doc.setFontSize(size || 9);
+    doc.setTextColor(COL[0], COL[1], COL[2]);
   }
-  function setNum(size=9) {
-    doc.setFont('helvetica','normal');
-    doc.setFontSize(size);
-    doc.setTextColor(Math.round(R*255), Math.round(G*255), Math.round(B*255));
+  function setNum(size) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(size || 9);
+    doc.setTextColor(COL[0], COL[1], COL[2]);
   }
-  function drawChar(x_pt, y_pt, ch) {
-    const x = mmX(x_pt), y = mmY(y_pt);
-    const isHeb = ch >= '\u0590' && ch <= '\u05FF';
-    isHeb ? setHeb() : setNum();
-    doc.text(ch, x, y);
-  }
-  function drawSpacedRev(text, xs, cy) {
-    const rev = [...text].reverse();
-    rev.forEach((ch,i) => { if(i<xs.length) { setNum(); doc.text(ch, mmX(xs[i]), mmY(cy)); } });
-  }
-  function drawSpacedFwd(text, xs, cy) {
-    [...text].forEach((ch,i) => { if(i<xs.length) { setNum(); doc.text(ch, mmX(xs[i]), mmY(cy)); } });
-  }
-  function drawHebCenter(text, x_pt, cy) {
-    if(!text) return;
-    setHeb();
-    // Reverse for visual RTL display
+ 
+  // Draw Hebrew string RIGHT-ALIGNED at point (ptX, ptY)
+  function heb(text, ptX, ptY, size) {
+    if (!text) return;
+    setHeb(size);
+    const [x, y] = mm(ptX, ptY);
+    // Reverse for visual RTL display in LTR engine
     const visual = text.split('').reverse().join('');
     const w = doc.getTextWidth(visual);
-    doc.text(visual, mmX(x_pt) - w/2, mmY(cy));
+    doc.text(visual, x - w, y);
   }
-  function drawChk(ox, oy_top) {
+ 
+  // Draw Hebrew string CENTERED at point (ptX, ptY)
+  function hebC(text, ptX, ptY, size) {
+    if (!text) return;
+    setHeb(size);
+    const [x, y] = mm(ptX, ptY);
+    const visual = text.split('').reverse().join('');
+    doc.text(visual, x, y, { align: 'center' });
+  }
+ 
+  // Draw number/latin CENTERED
+  function numC(text, ptX, ptY, size) {
+    if (!text && text !== 0) return;
+    setNum(size);
+    const [x, y] = mm(ptX, ptY);
+    doc.text(String(text), x, y, { align: 'center' });
+  }
+ 
+  // Draw number/latin at exact X (left-aligned)
+  function num(text, ptX, ptY, size) {
+    if (!text && text !== 0) return;
+    setNum(size);
+    const [x, y] = mm(ptX, ptY);
+    doc.text(String(text), x, y);
+  }
+ 
+  // Draw single char (auto font) at exact X
+  function ch(c, ptX, ptY) {
+    const isHeb = c >= '\u0590' && c <= '\u05FF';
+    isHeb ? setHeb() : setNum();
+    const [x, y] = mm(ptX, ptY);
+    doc.text(c, x, y);
+  }
+ 
+  // Draw X checkbox
+  function chk(ox, oy_top) {
     setNum();
-    doc.text('X', mmX(ox+3.5), mmY(oy_top+8));
+    const [x, y] = mm(ox + 3.5, oy_top + 8);
+    doc.text('X', x, y, { align: 'center' });
   }
-
-  // ── Page 1 ────────────────────────────────────────────
+ 
+  // Spaced digits forward (xs[0] = first digit)
+  function spacedFwd(text, xs, cy) {
+    [...String(text)].forEach((d, i) => { if (i < xs.length) numC(d, xs[i], cy); });
+  }
+ 
+  // Spaced digits reversed (xs[0] = last digit)
+  function spacedRev(text, xs, cy) {
+    [...String(text)].reverse().forEach((d, i) => { if (i < xs.length) numC(d, xs[i], cy); });
+  }
+ 
+  // ── Exact coordinates (calibrated from filled example PDF) ───────────────
+ 
+  const C = {
+    year:   { cy: 93.4,  xs: [227.0, 243.2, 259.4, 275.6] },
+    emp:    { cy: 175.7 },
+    emp_name_chars: [
+      [508.88,'ד'],[505.61,'.'],[499.00,'ב'],[495.73,' '],[489.12,'ב'],
+      [485.41,'י'],[478.43,'ה'],[471.33,'ס'],[468.06,' '],[462.38,'ל'],
+      [455.39,'ט'],[451.43,'נ'],[447.72,'י'],[440.62,'ס']
+    ],
+    emp_addr_chars: [
+      [355.14,'ה'],[348.36,'א'],[344.65,'י'],[338.70,'ר'],[335.00,'ו'],
+      [327.89,'ס'],[324.19,'י'],[317.20,'ם'],[313.93,' '],[307.40,'2'],
+      [304.13,','],[300.86,' '],[296.89,'נ'],[289.79,'ס'],[286.52,' '],
+      [280.48,'צ'],[276.77,'י'],[273.07,'ו'],[269.11,'נ'],[262.12,'ה']
+    ],
+    emp_phone_chars: [
+      [135.11,'0'],[141.65,'5'],[148.19,'4'],[154.73,'-'],[158.64,'4'],
+      [165.18,'5'],[171.72,'3'],[178.26,'0'],[184.80,'7'],[191.33,'5'],[197.87,'6']
+    ],
+    emp_tax_chars: [
+      [31.69,'9'],[42.92,'2'],[54.15,'6'],[65.39,'3'],[76.62,'7'],
+      [87.85,'1'],[99.08,'4'],[110.32,'2'],[121.55,'8']
+    ],
+    name: {
+      cy: 231.7,
+      last_x: 373.6, first_x: 259.3,
+      id_xs:    [530.7,519.5,508.3,497.1,486.0,474.8,463.6,452.4,441.3],
+      birth_xs: [201.0,189.8,178.7,167.5,156.3,145.2,134.0,122.9]
+    },
+    addr: {
+      cy: 253.0,
+      street_x: 309.0, num_x: 213.7, city_x: 153.7,
+      zip_xs: [33.6,44.7,55.9,67.1,78.3,89.5,100.6]
+    },
+    cb: {
+      gender_male:    [528.4, 279.1],
+      gender_female:  [528.4, 292.1],
+      marital: {
+        single:   [489.3, 277.8], married:  [430.2, 277.8],
+        divorced: [362.9, 277.8], widowed:  [309.7, 277.8]
+      },
+      resident_yes: [270.6, 279.0], resident_no: [248.6, 279.9],
+      kupah:        [123.2, 277.2]
+    },
+    kupah_name: { x: 49.5, cy: 295.3 },
+    phone: {
+      cy: 321.0,
+      mob_xs: [89.9,95.4,100.8,106.3,111.8,117.2,122.7,128.1,133.6,139.1],
+      ph_xs:  [250.5,256.0,261.5,267.0,272.5,278.0,283.5,289.0,294.5,300.0],
+      email_x: 380.4, email_cy: 320.0
+    },
+    income: {
+      monthly_salary: [238.2,357.1], extra_position: [238.2,371.0],
+      partial_salary: [238.2,383.0], daily_wage:     [238.2,395.0],
+      pension:        [238.2,407.0], scholarship:    [238.2,419.0]
+    },
+    work: { cy: 384.8, xs: [34.4,45.7,57.0,68.3,79.7,91.0,102.3,113.6] },
+    p2: {
+      resident_yes: [510.7, 39.3],
+      sign_cy: 649.0,
+      sign_xs: [157.3,163.2,169.1,172.0,177.9,183.8,186.8,192.6,198.5,204.4],
+      name_x: 390.0
+    }
+  };
+ 
+  // ── Page 1 ───────────────────────────────────────────────────────────────
   doc.addImage(FORM_P1, 'JPEG', 0, 0, PW, PH);
-
+ 
   // שנת המס
-  '2026'.split('').forEach((d,i) => { setNum(); doc.text(d, mmX(C.year.xs[i]), mmY(C.year.cy)); });
-
-  // מעסיק — char by char
-  C.emp_name_chars.forEach(([x,ch]) => drawChar(x, C.emp.cy, ch));
-  C.emp_addr_chars.forEach(([x,ch]) => drawChar(x, C.emp.cy, ch));
-  C.emp_phone_chars.forEach(([x,ch]) => drawChar(x, C.emp.cy, ch));
-  C.emp_tax_chars.forEach(([x,ch]) => drawChar(x, C.emp.cy, ch));
-
-  // שם עובד
+  spacedFwd('2026', C.year.xs, C.year.cy);
+ 
+  // א. מעסיק — char by char from exact positions
+  [...C.emp_name_chars, ...C.emp_addr_chars,
+   ...C.emp_phone_chars, ...C.emp_tax_chars].forEach(([x, c]) => ch(c, x, C.emp.cy));
+ 
+  // ב. שם
   const ln = lastName || '', fn = firstName || '';
-  drawHebCenter(ln, C.name.last_x,  C.name.cy);
-  drawHebCenter(fn, C.name.first_x, C.name.cy);
-  drawSpacedRev((idNum||'').padStart(9,'0'), C.name.id_xs, C.name.cy);
-
-  // תאריך לידה — read from form (ddmmyyyy)
-  const birthRaw = (document.getElementById('birthDate').value||'').replace(/[^\/\d]/g,'');
-  // convert dd/mm/yyyy → ddmmyyyy
-  const birthDigits = birthRaw.replace(/\//g,'').replace(/-/g,'');
-  if(birthDigits.length===8) drawSpacedRev(birthDigits, C.name.birth_xs, C.name.cy);
-
+  hebC(ln, C.name.last_x,  C.name.cy);
+  hebC(fn, C.name.first_x, C.name.cy);
+  spacedRev((idNum || '').padStart(9,'0'), C.name.id_xs, C.name.cy);
+ 
+  // תאריך לידה
+  const birthRaw = (document.getElementById('birthDate').value || '').replace(/\//g,'').replace(/-/g,'');
+  if (birthRaw.length >= 8) spacedRev(birthRaw.slice(0,8), C.name.birth_xs, C.name.cy);
+ 
   // כתובת
-  const street = document.getElementById('street').value||'';
-  const streetNumVal = document.getElementById('streetNum') ? document.getElementById('streetNum').value||'' : '';
-  drawHebCenter(street, C.addr.street_x, C.addr.cy);
-  if(streetNumVal) { setNum(); doc.text(streetNumVal, mmX(C.addr.num_x), mmY(C.addr.cy)); }
-  drawHebCenter(document.getElementById('city').value||'', C.addr.city_x, C.addr.cy);
-  const zipVal = document.getElementById('zip').value||'';
-  drawSpacedFwd(zipVal, C.addr.zip_xs, C.addr.cy);
-
+  const streetVal = document.getElementById('street').value || '';
+  const cityVal   = document.getElementById('city').value || '';
+  const zipVal    = document.getElementById('zip').value || '';
+  hebC(streetVal, C.addr.street_x, C.addr.cy);
+  hebC(cityVal,   C.addr.city_x,   C.addr.cy);
+  spacedFwd(zipVal, C.addr.zip_xs, C.addr.cy);
+ 
   // מין
   const gender = getRadio('gender');
-  if(gender==='male')   drawChk(...C.cb.gender_male);
-  if(gender==='female') drawChk(...C.cb.gender_female);
-
+  if (gender === 'male')   chk(...C.cb.gender_male);
+  if (gender === 'female') chk(...C.cb.gender_female);
+ 
   // מצב משפחתי
   const marital = getRadio('marital');
-  if(C.cb.marital[marital]) drawChk(...C.cb.marital[marital]);
-
+  if (C.cb.marital[marital]) chk(...C.cb.marital[marital]);
+ 
   // תושב ישראל
   const resident = getRadio('resident');
-  if(resident==='yes') drawChk(...C.cb.resident_yes);
-  if(resident==='no')  drawChk(...C.cb.resident_no);
-
+  if (resident === 'yes') chk(...C.cb.resident_yes);
+  if (resident === 'no')  chk(...C.cb.resident_no);
+ 
   // קופת חולים
   const kupat = document.querySelector('input[name="kupat"]:checked')?.value;
-  if(kupat==='yes') {
-    drawChk(...C.cb.kupah);
-    const kupahName = document.getElementById('kupahName')?.value||'';
-    drawHebCenter(kupahName, C.kupah_name.x, C.kupah_name.cy);
+  if (kupat === 'yes') {
+    chk(...C.cb.kupah);
+    const kupahName = document.getElementById('kupahName')?.value || '';
+    hebC(kupahName, C.kupah_name.x, C.kupah_name.cy);
   }
-
+ 
   // טלפון / נייד / אימייל
-  const mobile = (document.getElementById('mobile').value||'').replace(/-/g,'');
-  const phone  = (document.getElementById('phone').value||'').replace(/-/g,'');
-  drawSpacedFwd(mobile, C.phone.mob_xs, C.phone.cy);
-  drawSpacedFwd(phone,  C.phone.ph_xs,  C.phone.cy);
-  const email = document.getElementById('email').value||'';
-  setNum(); doc.text(email, mmX(C.phone.email_x), mmY(C.phone.email_cy));
-
+  const mobile = (document.getElementById('mobile').value || '').replace(/-/g,'');
+  const phone  = (document.getElementById('phone').value  || '').replace(/-/g,'');
+  const email  = document.getElementById('email').value || '';
+  spacedFwd(mobile, C.phone.mob_xs, C.phone.cy);
+  spacedFwd(phone,  C.phone.ph_xs,  C.phone.cy);
+  setNum();
+  doc.text(email, ...mm(C.phone.email_x, C.phone.email_cy));
+ 
   // סוג הכנסה
   const incomeType = getRadio('incomeType');
-  if(C.income[incomeType]) drawChk(...C.income[incomeType]);
-
+  if (C.income[incomeType]) chk(...C.income[incomeType]);
+ 
   // תאריך תחילת עבודה
-  const workRaw = (document.getElementById('workStart').value||'').replace(/[^\d]/g,'');
-  if(workRaw.length>=8) drawSpacedFwd(workRaw.slice(0,8), C.work.xs, C.work.cy);
-
-  // ── Page 2 ────────────────────────────────────────────
+  const workRaw = (document.getElementById('workStart').value || '').replace(/[^\d]/g,'');
+  if (workRaw.length >= 8) spacedFwd(workRaw.slice(0,8), C.work.xs, C.work.cy);
+ 
+  // ── Page 2 ───────────────────────────────────────────────────────────────
   doc.addPage();
   doc.addImage(FORM_P2, 'JPEG', 0, 0, PW, PH);
-
-  // תושב ישראל — section 1
-  drawChk(...C.p2.resident_yes);
-
+ 
+  // תושב ישראל
+  chk(...C.p2.resident_yes);
+ 
   // תאריך חתימה
-  const signDate = document.getElementById('signDate').value||'';
-  [...signDate].forEach((ch,i) => {
-    if(i<C.p2.sign_xs.length) { setNum(); doc.text(ch, mmX(C.p2.sign_xs[i]), mmY(C.p2.sign_cy)); }
+  const signDate = document.getElementById('signDate').value || '';
+  [...signDate].forEach((c, i) => {
+    if (i < C.p2.sign_xs.length) numC(c, C.p2.sign_xs[i], C.p2.sign_cy);
   });
-
+ 
   // שם מלא
-  drawHebCenter(`${fn} ${ln}`, C.p2.name_x, C.p2.sign_cy);
-
+  hebC(`${fn} ${ln}`, C.p2.name_x, C.p2.sign_cy);
+ 
   return doc.output('datauristring').split(',')[1];
 }
-
+ 
 // Main send handler
 async function handleSend() {
   const firstName = document.getElementById('firstName').value.trim();
@@ -665,7 +717,7 @@ async function handleSend() {
   const workStart = document.getElementById('workStart').value.trim();
   const statusMsg = document.getElementById('statusMsg');
   const sendBtn = document.getElementById('sendBtn');
-
+ 
   if(!firstName || !lastName) { statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא שם פרטי ושם משפחה</span>'; return; }
   if(!id) { statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא מספר זהות</span>'; return; }
   if(!incomeType) {
@@ -680,32 +732,32 @@ async function handleSend() {
     document.getElementById('sectionD').scrollIntoView({behavior:'smooth',block:'center'});
     return;
   }
-
+ 
   sendBtn.disabled = true;
   sendBtn.textContent = '⏳ מייצר PDF...';
   statusMsg.innerHTML = '';
-
+ 
   try {
     const pdfBase64 = await generatePdfBase64(firstName, lastName, id);
     const filename = `tofes101_${firstName}_${lastName}_${id}.pdf`;
     const subject = `טופס 101 — ${firstName} ${lastName} | ת.ז. ${id}`;
     const formSummary = buildFormSummary(firstName, lastName, id);
-
+ 
     sendBtn.textContent = '⏳ שולח...';
-
+ 
     const res = await fetch('/.netlify/functions/submit-form', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ pdfBase64, filename, subject, formSummary, studentName: `${firstName} ${lastName}`, studentId: id })
     });
-
+ 
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || 'שגיאה בשרת');
-
+ 
     sendBtn.textContent = '✓ נשלח!';
     sendBtn.style.background = '#1a7a4a';
     statusMsg.innerHTML = `<span class="status-ok">✓ PDF נשלח בהצלחה ל-kippstar@gmail.com</span>`;
-
+ 
   } catch(err) {
     console.error(err);
     sendBtn.disabled = false;
