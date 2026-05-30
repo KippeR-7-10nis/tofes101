@@ -6,6 +6,7 @@
 <title>טופס 101 — כרטיס עובד</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:100vh}
@@ -456,65 +457,123 @@ function buildFormSummary(firstName, lastName, id) {
   return lines.join('\n');
 }
 
-// PDF generation
+// PDF generation using html2canvas — full Hebrew support
 async function generatePdfBase64(firstName, lastName, id) {
-  const jsPDFClass = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF; const { jsPDF } = { jsPDF: jsPDFClass };
-  const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const pageW=210, margin=15, colRight=pageW-margin;
-  let y=18;
-  const mL={single:'רווק/ה',married:'נשוי/אה',divorced:'גרוש/ה',widowed:'אלמן/ה'};
-  const sI={none:'אין הכנסה',work:'עבודה/קצבה/עסק',other:'הכנסה אחרת'};
+  // Build a hidden div with all form data in Hebrew
+  const mL = {single:'רווק/ה',married:'נשוי/אה',divorced:'גרוש/ה',widowed:'אלמן/ה'};
+  const iLab = {monthly_salary:'משכורת חודש',extra_position:'משרה נוספת',partial_salary:'משכורת חלקית',daily_wage:'שכר עובד יומי',pension:'קצבה',scholarship:'מלגה'};
+  const sI = {none:'אין הכנסה',work:'עבודה/קצבה/עסק',other:'הכנסה אחרת'};
 
-  function chk(){if(y>270){doc.addPage();y=18;}}
-  function addTitle(t){doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(26,39,68);doc.text(t,colRight,y,{align:'right'});y+=7;doc.setDrawColor(200,169,110);doc.setLineWidth(0.8);doc.line(margin,y,colRight,y);y+=6;}
-  function addSec(t){chk();y+=2;doc.setFillColor(235,232,226);doc.rect(margin,y-4.5,pageW-margin*2,7,'F');doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(26,39,68);doc.text(t,colRight,y,{align:'right'});y+=7;}
-  function addRow(l,v){chk();doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(90,90,90);doc.text(l+':',colRight,y,{align:'right'});doc.setFont('helvetica','normal');doc.setTextColor(20,20,20);doc.text(String(v||'—'),colRight-doc.getTextWidth(l+':  '),y,{align:'right'});y+=5.5;}
-  function addLine(t){chk();doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(20,20,20);doc.text(t,colRight,y,{align:'right'});y+=5.5;}
+  const activeChildren = [];
+  document.querySelectorAll('#childrenBody tr').forEach(row => {
+    const n = row.querySelector('input[id^=cName]');
+    if(n && n.value.trim()) {
+      const bi = row.querySelector('input[id^=cId]');
+      const bb = row.querySelector('input[id^=cBirth]');
+      const c1 = row.querySelector('input[id^=cCol1]');
+      const c2 = row.querySelector('input[id^=cCol2]');
+      activeChildren.push(`${n.value} | ת.ז.: ${bi?bi.value:''} | לידה: ${bb?bb.value:''} | בחזקתי: ${c1&&c1.checked?'כן':'לא'} | קצבה: ${c2&&c2.checked?'כן':'לא'}`);
+    }
+  });
 
-  addTitle(`טופס 101 — כרטיס עובד  |  שנת מס ${CURRENT_YEAR}`);
-  addSec('א. פרטי המעסיק');
-  addRow('שם','ד.ב ביהס לטניס'); addRow('כתובת','האירוסים 2, נס ציונה'); addRow('טלפון','054-4530756'); addRow('תיק ניכויים','926371428');
-  addSec('ב. פרטי העובד/ת');
-  addRow('שם משפחה',document.getElementById('lastName').value);
-  addRow('שם פרטי',document.getElementById('firstName').value);
-  addRow('מספר זהות',id);
-  if(document.getElementById('passport').value) addRow('דרכון',document.getElementById('passport').value);
-  addRow('תאריך לידה',document.getElementById('birthDate').value);
-  if(document.getElementById('aliyaDate').value) addRow('תאריך עליה',document.getElementById('aliyaDate').value);
-  addRow('כתובת',`${document.getElementById('street').value}, ${document.getElementById('city').value} ${document.getElementById('zip').value}`);
-  addRow('אימייל',document.getElementById('email').value);
-  addRow('טלפון',document.getElementById('phone').value);
-  addRow('נייד',document.getElementById('mobile').value);
-  addRow('מין',getRadio('gender')==='male'?'זכר':'נקבה');
-  addRow('מצב משפחתי',mL[getRadio('marital')]||'—');
-  addRow('תושב ישראל',getRadio('resident')==='yes'?'כן':'לא');
+  const activeEx = exemptions.filter(ex => document.getElementById(ex.id) && document.getElementById(ex.id).checked);
 
-  const childRows=document.querySelectorAll('#childrenBody tr');
-  const activeC=[];
-  childRows.forEach(row=>{const n=row.querySelector('input[id^=cName]');if(n&&n.value.trim())activeC.push(row);});
-  if(activeC.length){addSec('ג. ילדים');activeC.forEach(row=>{const n=row.querySelector('input[id^=cName]');const bi=row.querySelector('input[id^=cId]');const bb=row.querySelector('input[id^=cBirth]');const c1=row.querySelector('input[id^=cCol1]');const c2=row.querySelector('input[id^=cCol2]');addLine(`• ${n.value}  ת.ז.: ${bi?bi.value:''}  ל: ${bb?bb.value:''}  בחזקתי: ${c1&&c1.checked?'כן':'לא'}  קצבה: ${c2&&c2.checked?'כן':'לא'}`);});}
+  const rows = [
+    ['שנת מס', CURRENT_YEAR],
+    ['---א. מעסיק---',''],
+    ['שם', 'ד.ב ביהס לטניס'],
+    ['כתובת', 'האירוסים 2, נס ציונה'],
+    ['טלפון', '054-4530756'],
+    ['תיק ניכויים', '926371428'],
+    ['---ב. עובד/ת---',''],
+    ['שם משפחה', document.getElementById('lastName').value],
+    ['שם פרטי', document.getElementById('firstName').value],
+    ['מספר זהות', id],
+    ['תאריך לידה', document.getElementById('birthDate').value],
+    ['כתובת', document.getElementById('street').value + ', ' + document.getElementById('city').value + ' ' + document.getElementById('zip').value],
+    ['אימייל', document.getElementById('email').value],
+    ['טלפון נייד', document.getElementById('mobile').value],
+    ['מין', getRadio('gender')==='male'?'זכר':'נקבה'],
+    ['מצב משפחתי', mL[getRadio('marital')]||'—'],
+    ['תושב ישראל', getRadio('resident')==='yes'?'כן':'לא'],
+    ['---ד. הכנסות---',''],
+    ['סוג הכנסה', iLab[getRadio('incomeType')]||'—'],
+    ['תאריך תחילת עבודה', document.getElementById('workStart').value],
+    ['---ה. הכנסות אחרות---',''],
+    ['הכנסות אחרות', getRadio('otherIncome')==='yes'?'כן':'לא'],
+  ];
 
-  addSec('ד. הכנסות ממעסיק זה');
-  addRow('סוג הכנסה',iL[getRadio('incomeType')]||'—');
-  addRow('תאריך תחילת עבודה',document.getElementById('workStart').value);
+  if(document.getElementById('spouseId').value) {
+    rows.push(['---ו. בן/בת זוג---','']);
+    rows.push(['שם', document.getElementById('spouseFirstName').value + ' ' + document.getElementById('spouseLastName').value]);
+    rows.push(['ת.ז.', document.getElementById('spouseId').value]);
+    rows.push(['הכנסות', sI[getRadio('spouseIncome')]||'—']);
+  }
 
-  addSec('ה. הכנסות אחרות');
-  addRow('הכנסות אחרות',getRadio('otherIncome')==='yes'?'כן':'לא');
+  if(activeChildren.length) {
+    rows.push(['---ג. ילדים---','']);
+    activeChildren.forEach(c => rows.push(['', c]));
+  }
 
-  if(document.getElementById('spouseId').value){addSec('ו. בן/בת הזוג');addRow('שם',`${document.getElementById('spouseFirstName').value} ${document.getElementById('spouseLastName').value}`);addRow('ת.ז.',document.getElementById('spouseId').value);addRow('הכנסות',sI[getRadio('spouseIncome')]||'—');}
+  if(activeEx.length) {
+    rows.push(['---ח. פטורים/זיכויים---','']);
+    activeEx.forEach(ex => rows.push(['✓', ex.label]));
+  }
 
-  const activeEx=exemptions.filter(ex=>document.getElementById(ex.id)&&document.getElementById(ex.id).checked);
-  if(activeEx.length){addSec('ח. פטור / זיכוי ממס');activeEx.forEach(ex=>addLine(`✓ ${ex.label}`));}
+  rows.push(['---י. הצהרה---','']);
+  rows.push(['תאריך הגשה', document.getElementById('signDate').value]);
+  rows.push(['שם מלא', firstName + ' ' + lastName]);
+  rows.push(['חתימה', '_______________________________']);
 
-  const t1=document.getElementById('taxReason1').checked;
-  const t2=document.getElementById('taxReason2').checked;
-  const t3=document.getElementById('taxReason3').checked;
-  if(t1||t2||t3){addSec('ט. תיאום מס');if(t1)addLine('✓ לא הייתה הכנסה עד תחילת עבודה');if(t2)addLine('✓ הכנסות נוספות ממשכורת');if(t3)addLine('✓ פקיד השומה אישר תיאום');}
+  const tableRows = rows.map(([k,v]) => {
+    if(k.startsWith('---')) {
+      const title = k.replace(/---/g,'');
+      return `<tr><td colspan="2" style="background:#1a2744;color:white;font-weight:bold;padding:8px 12px;font-size:13px">${title}</td></tr>`;
+    }
+    return `<tr><td style="font-weight:600;color:#555;padding:6px 12px;width:160px;border-bottom:1px solid #eee;font-size:12px">${k}</td><td style="padding:6px 12px;border-bottom:1px solid #eee;font-size:12px;color:#1a2744">${v||'—'}</td></tr>`;
+  }).join('');
 
-  addSec('י. הצהרה');
-  addRow('תאריך הגשה',document.getElementById('signDate').value);
-  addRow('שם מלא',`${firstName} ${lastName}`);
-  y+=10; addLine('חתימה: _______________________________');
+  const printDiv = document.createElement('div');
+  printDiv.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:794px;background:white;direction:rtl;font-family:Arial,sans-serif;padding:30px;';
+  printDiv.innerHTML = `
+    <div style="background:#1a2744;color:white;padding:16px 20px;border-radius:8px 8px 0 0;margin-bottom:0">
+      <div style="font-size:20px;font-weight:bold">טופס 101 — כרטיס עובד</div>
+      <div style="font-size:12px;opacity:0.7;margin-top:4px">שנת מס ${CURRENT_YEAR} | ד.ב ביהס לטניס</div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;border:1px solid #ddd">${tableRows}</table>
+    <div style="margin-top:20px;padding:12px;background:#f8f5f0;border-right:4px solid #c8a96e;font-size:11px;color:#555">
+      אני מצהיר/ה כי הפרטים שמסרתי בטופס זה הינם מלאים ונכונים.
+    </div>
+  `;
+  document.body.appendChild(printDiv);
+
+  const canvas = await html2canvas(printDiv, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+  document.body.removeChild(printDiv);
+
+  const { jsPDF } = window.jspdf || {};
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const imgData = canvas.toDataURL('image/jpeg', 0.95);
+  const pageW = 210;
+  const pageH = 297;
+  const imgH = (canvas.height * pageW) / canvas.width;
+
+  if(imgH <= pageH) {
+    doc.addImage(imgData, 'JPEG', 0, 0, pageW, imgH);
+  } else {
+    // Multi-page
+    let y = 0;
+    while(y < canvas.height) {
+      const sliceH = Math.min(canvas.height - y, (pageH * canvas.width) / pageW);
+      const sliceCanvas = document.createElement('canvas');
+      sliceCanvas.width = canvas.width;
+      sliceCanvas.height = sliceH;
+      sliceCanvas.getContext('2d').drawImage(canvas, 0, -y);
+      const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.95);
+      if(y > 0) doc.addPage();
+      doc.addImage(sliceData, 'JPEG', 0, 0, pageW, (sliceH * pageW) / canvas.width);
+      y += sliceH;
+    }
+  }
 
   return doc.output('datauristring').split(',')[1];
 }
@@ -567,7 +626,7 @@ async function handleSend() {
 
     sendBtn.textContent = '✓ נשלח!';
     sendBtn.style.background = '#1a7a4a';
-    statusMsg.innerHTML = `<span class="status-ok">✓ PDF הועלה ונשלחה הודעה ל-kippstar@gmail.com</span>`;
+    statusMsg.innerHTML = `<span class="status-ok">✓ PDF נשלח בהצלחה ל-kippstar@gmail.com</span>`;
 
   } catch(err) {
     console.error(err);
