@@ -716,7 +716,9 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   }
   // ה. checkboxes 7-10 (use 'q' glyph offset)
   function chkQ(ox, oy_top) {
-    setNum(); doc.text('X', mmX(ox+3.5), mmY(oy_top+8), { align:'center' });
+    setNum();
+    const PW2=210, SRC_W2=595.28, SRC_H2=841.89, PH2=297;
+    doc.text('X', (ox+3.5)*(PW2/SRC_W2), (oy_top+8)*(PH2/SRC_H2), { align:'center' });
   }
   if (document.getElementById('he7')?.checked)  chkQ(235.5, 535.8);
   if (document.getElementById('he8')?.checked)  chkQ(235.5, 559.1);
