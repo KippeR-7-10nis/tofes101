@@ -722,7 +722,7 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   const taxCoordMap = {
     taxReason1: [512.4, 479.4],
     taxReason2: [512.4, 508.3],
-    taxReason3: [512.4, 588.7],
+    taxReason3: [512.4, 589.0],
   };
   Object.keys(taxCoordMap).forEach(id => {
     const el = document.getElementById(id);
@@ -741,14 +741,18 @@ async function generatePdfBase64(firstName, lastName, idNum) {
     taxEmpRows.forEach((row, i) => {
       if (i >= TAX_ROWS.length) return;
       const cy = TAX_ROWS[i];
-      const cells = row.querySelectorAll('input');
-      const vals = [...cells].map(c => c.value || '');
-      const [name, addr, taxfile, type, income, withheld] = vals;
-      if (name) hebC(name, TAX_COLS.name_x, cy);
-      if (addr) hebC(addr, TAX_COLS.addr_x, cy);
-      if (taxfile) numC(taxfile, TAX_COLS.taxfile_x, cy);
-      if (type) hebC(type, TAX_COLS.type_x, cy);
-      if (income) numC(income, TAX_COLS.income_x, cy);
+      // Get inputs by their id pattern: te_name0, te_addr0, te_tax0, te_type0, te_inc0, te_wth0
+      const name     = (row.querySelector('input[id^="te_name"]') || {}).value || '';
+      const addr     = (row.querySelector('input[id^="te_addr"]') || {}).value || '';
+      const taxfile  = (row.querySelector('input[id^="te_tax"]')  || {}).value || '';
+      const type     = (row.querySelector('input[id^="te_type"]') || {}).value || '';
+      const income   = (row.querySelector('input[id^="te_inc"]')  || {}).value || '';
+      const withheld = (row.querySelector('input[id^="te_wth"]')  || {}).value || '';
+      if (name)     hebC(name,     TAX_COLS.name_x,     cy);
+      if (addr)     hebC(addr,     TAX_COLS.addr_x,     cy);
+      if (taxfile)  numC(taxfile,  TAX_COLS.taxfile_x,  cy);
+      if (type)     hebC(type,     TAX_COLS.type_x,     cy);
+      if (income)   numC(income,   TAX_COLS.income_x,   cy);
       if (withheld) numC(withheld, TAX_COLS.withheld_x, cy);
     });
   }
@@ -778,7 +782,36 @@ async function handleSend() {
   const sendBtn = document.getElementById('sendBtn');
 
   if(!firstName || !lastName) { statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא שם פרטי ושם משפחה</span>'; return; }
-  if(!id) { statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא מספר זהות</span>'; return; }
+  if(!id || id.length < 5) { statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא מספר זהות תקין</span>'; return; }
+
+  // Validate birth date DD/MM/YYYY
+  const birthVal = document.getElementById('birthDate').value || '';
+  if (birthVal && !/^\d{2}\/\d{2}\/\d{4}$/.test(birthVal)) {
+    statusMsg.innerHTML = '<span class="status-err">⚠️ תאריך לידה חייב להיות בפורמט DD/MM/YYYY</span>'; return;
+  }
+
+  // Validate phones - 10 digits only
+  const mobileVal = (document.getElementById('mobile').value || '').replace(/-/g,'');
+  const phoneVal  = (document.getElementById('phone').value  || '').replace(/-/g,'');
+  if (mobileVal && (!/^\d{10}$/.test(mobileVal) && !/^\d{9}$/.test(mobileVal))) {
+    statusMsg.innerHTML = '<span class="status-err">⚠️ טלפון נייד חייב להכיל 10 ספרות בלבד</span>'; return;
+  }
+  if (phoneVal && (!/^\d{10}$/.test(phoneVal) && !/^\d{9}$/.test(phoneVal))) {
+    statusMsg.innerHTML = '<span class="status-err">⚠️ מספר טלפון חייב להכיל 10 ספרות בלבד</span>'; return;
+  }
+
+  // Validate email
+  const emailVal = document.getElementById('email').value || '';
+  if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+    statusMsg.innerHTML = '<span class="status-err">⚠️ כתובת אימייל לא תקינה</span>'; return;
+  }
+
+  // Validate work start date DD/MM/YYYY
+  const workVal = document.getElementById('workStart').value || '';
+  if (!workVal || !/^\d{2}\/\d{2}\/\d{4}$/.test(workVal)) {
+    statusMsg.innerHTML = '<span class="status-err">⚠️ תאריך תחילת עבודה חייב להיות בפורמט DD/MM/YYYY</span>'; return;
+  }
+
   if(!incomeType) {
     statusMsg.innerHTML = '<span class="status-err">⚠️ יש לבחור סוג הכנסה בסעיף ד</span>';
     document.getElementById('sectionD').classList.add('mandatory-border');
