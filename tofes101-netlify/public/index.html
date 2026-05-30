@@ -158,6 +158,13 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
             <label class="radio-opt"><input type="radio" name="resident" value="no"> לא</label>
           </div>
         </div>
+        <div class="field"><label>חבר קיבוץ / מושב שיתופי</label>
+          <div class="radio-group" style="flex-direction:column;gap:6px">
+            <label class="radio-opt"><input type="radio" name="kibbutz" value="no"> לא</label>
+            <label class="radio-opt"><input type="radio" name="kibbutz" value="yes1"> כן — הכנסות מועברות לקיבוץ</label>
+            <label class="radio-opt"><input type="radio" name="kibbutz" value="yes2"> כן — הכנסות אינן מועברות לקיבוץ</label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -192,6 +199,12 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         <label class="radio-opt"><input type="radio" name="otherIncome" value="yes" onchange="toggleOtherIncome()"> יש לי הכנסות אחרות</label>
       </div>
       <div id="otherIncomeDetails" style="display:none;flex-direction:column;gap:10px">
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:8px">
+          <label class="cb-opt"><input type="checkbox" id="he7"> 7 — אבקש נקודות זיכוי ומדרגות מס כנגד הכנסתי זו</label>
+          <label class="cb-opt"><input type="checkbox" id="he8"> 8 — מקבל/ת נקודות זיכוי ומדרגות מס בהכנסה אחרת</label>
+          <label class="cb-opt"><input type="checkbox" id="he9"> 9 — אין הפרשות לקרן השתלמות</label>
+          <label class="cb-opt"><input type="checkbox" id="he10"> 10 — אין הפרשות לקצבה/אובדן כושר עבודה</label>
+        </div>
         <div style="font-size:13px;font-weight:500;color:#555">סוג ההכנסה האחרת:</div>
         <div class="income-grid" id="otherIncomeTypeGrid"></div>
         <label class="cb-opt" id="cbReqPoints"><input type="checkbox" id="requestPoints"> <span class="ex-num">7</span> אבקש נקודות זיכוי כנגד הכנסה זו</label>
@@ -690,7 +703,25 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   // ה. הכנסות אחרות radio
   const otherIncome = getRadio('otherIncome');
   if (otherIncome === 'no')  chk(236.5, 453.8);
-  if (otherIncome === 'yes') chk(236.5, 478.2);
+  if (otherIncome === 'yes') {
+    chk(236.5, 478.2);
+    // Other income type radios
+    const otherIncType = getRadio('otherIncomeType');
+    const otherIncMap = {
+      monthly_salary: [236.5, 490.1], daily_wage:     [118.6, 490.1],
+      extra_position: [236.5, 501.1], pension:        [118.6, 501.1],
+      partial_salary: [236.5, 512.1], scholarship:    [118.6, 512.1],
+    };
+    if (otherIncMap[otherIncType]) chk(...otherIncMap[otherIncType]);
+  }
+  // ה. checkboxes 7-10 (use 'q' glyph offset)
+  function chkQ(ox, oy_top) {
+    setNum(); doc.text('X', mmX(ox+3.5), mmY(oy_top+8), { align:'center' });
+  }
+  if (document.getElementById('he7')?.checked)  chkQ(235.5, 535.8);
+  if (document.getElementById('he8')?.checked)  chkQ(235.5, 559.1);
+  if (document.getElementById('he9')?.checked)  chkQ(235.6, 583.4);
+  if (document.getElementById('he10')?.checked) chkQ(235.5, 617.7);
 
   // ד. סוג הכנסה
   const incomeType = getRadio('incomeType');
@@ -732,10 +763,10 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   // ט. תיאום מס table rows (when taxReason2 checked)
   const taxReason2El = document.getElementById('taxReason2');
   if (taxReason2El && taxReason2El.checked) {
-    const TAX_ROWS = [548, 562, 576];
+    const TAX_ROWS = [553.2, 567.0, 580.8];
     const TAX_COLS = {
-      name_x: 490, addr_x: 400, taxfile_x: 275,
-      type_x: 200, income_x: 130, withheld_x: 60
+      name_x: 490, addr_x: 390, taxfile_x: 275,
+      type_x: 200, income_x: 130, withheld_x: 55
     };
     const taxEmpRows = document.querySelectorAll('#taxEmployersBody tr');
     taxEmpRows.forEach((row, i) => {
@@ -786,8 +817,12 @@ async function handleSend() {
 
   // Validate birth date DD/MM/YYYY
   const birthVal = document.getElementById('birthDate').value || '';
-  if (birthVal && !/^\d{2}\/\d{2}\/\d{4}$/.test(birthVal)) {
-    statusMsg.innerHTML = '<span class="status-err">⚠️ תאריך לידה חייב להיות בפורמט DD/MM/YYYY</span>'; return;
+  if (birthVal) {
+    const bParts = birthVal.split('/');
+    const bDay=parseInt(bParts[0]), bMon=parseInt(bParts[1]), bYear=parseInt(bParts[2]);
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(birthVal) || bDay<1||bDay>31||bMon<1||bMon>12||bYear<1900||bYear>2025) {
+      statusMsg.innerHTML = '<span class="status-err">⚠️ תאריך לידה לא תקין (DD/MM/YYYY)</span>'; return;
+    }
   }
 
   // Validate phones - 10 digits only
@@ -802,14 +837,17 @@ async function handleSend() {
 
   // Validate email
   const emailVal = document.getElementById('email').value || '';
-  if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+  if (emailVal && !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(emailVal)) {
     statusMsg.innerHTML = '<span class="status-err">⚠️ כתובת אימייל לא תקינה</span>'; return;
   }
 
   // Validate work start date DD/MM/YYYY
   const workVal = document.getElementById('workStart').value || '';
-  if (!workVal || !/^\d{2}\/\d{2}\/\d{4}$/.test(workVal)) {
-    statusMsg.innerHTML = '<span class="status-err">⚠️ תאריך תחילת עבודה חייב להיות בפורמט DD/MM/YYYY</span>'; return;
+  if (!workVal) { statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא תאריך תחילת עבודה</span>'; return; }
+  const wParts = workVal.split('/');
+  const wDay=parseInt(wParts[0]), wMon=parseInt(wParts[1]), wYear=parseInt(wParts[2]);
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(workVal) || wDay<1||wDay>31||wMon<1||wMon>12||wYear<2000||wYear>2030) {
+    statusMsg.innerHTML = '<span class="status-err">⚠️ תאריך תחילת עבודה לא תקין (DD/MM/YYYY)</span>'; return;
   }
 
   if(!incomeType) {
