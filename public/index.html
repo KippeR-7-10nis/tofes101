@@ -132,7 +132,7 @@ body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:
         <div class="field"><label>אימייל</label><input id="email" type="email"></div>
         <div class="field"><label>קופת חולים</label>
           <div class="radio-group">
-            <label class="radio-opt"><input type="radio" name="kupat" value="no" checked> לא חבר</label>
+            <label class="radio-opt"><input type="radio" name="kupat" value="no"> לא חבר</label>
             <label class="radio-opt"><input type="radio" name="kupat" value="yes"> כן: <input id="kupahName" style="width:100px;margin-right:6px;padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:12px" placeholder="שם הקופה"></label>
           </div>
         </div>
@@ -765,7 +765,7 @@ async function generatePdfBase64(firstName, lastName, idNum) {
   // ט. תיאום מס table rows (when taxReason2 checked)
   const taxReason2El = document.getElementById('taxReason2');
   if (taxReason2El && taxReason2El.checked) {
-    const TAX_ROWS = [553.2, 567.0, 580.8];
+    const TAX_ROWS = [554.2, 568.0, 581.8];
     const TAX_COLS = {
       name_x: 490, addr_x: 390, taxfile_x: 275,
       type_x: 200, income_x: 130, withheld_x: 55
