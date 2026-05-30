@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>טופס 101 — כרטיס עובד</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Heebo',sans-serif;background:#f0ede8;direction:rtl;min-height:100vh}
+.page-bg{padding:2rem 1rem}
+.container{max-width:900px;margin:0 auto}
+.header-bar{background:#1a2744;color:white;padding:1.5rem 2rem;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between}
+.header-logo{font-size:22px;font-weight:700}
+.header-sub{font-size:13px;color:#8fa4d4;margin-top:3px}
+.header-badge{background:#c8a96e;color:#1a2744;font-weight:700;font-size:13px;padding:6px 14px;border-radius:20px}
+.progress-bar{height:4px;background:#e8e4dc}
+.progress-fill{height:100%;background:#c8a96e;transition:width 0.4s;width:0%}
+.form-body{background:white;border-radius:0 0 12px 12px;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
+.section{border-bottom:1px solid #e8e4dc;padding:1.5rem 2rem}
+.section:last-child{border-bottom:none}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+.section-letter{width:28px;height:28px;background:#1a2744;color:white;border-radius:50%;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-title{font-size:15px;font-weight:600;color:#1a2744}
+.section-subtitle{font-size:12px;color:#888;margin-top:2px}
+.field-grid{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:500;color:#555}
+.field input,.field select{border:1px solid #ddd;border-radius:8px;padding:9px 12px;font-size:14px;font-family:'Heebo',sans-serif;direction:rtl;color:#1a2744;background:#fafafa;transition:border-color 0.15s}
+.field input:focus,.field select:focus{outline:none;border-color:#1a2744;box-shadow:0 0 0 3px rgba(26,39,68,0.08);background:white}
+.radio-group{display:flex;gap:16px;flex-wrap:wrap;margin-top:4px}
+.radio-opt{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:#333}
+.radio-opt input{accent-color:#1a2744;width:16px;height:16px}
+.cb-opt{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:#333;padding:8px 12px;border:1px solid #ddd;border-radius:8px;transition:all 0.15s;background:#fafafa}
+.cb-opt:hover{border-color:#1a2744;background:#f0f2f8}
+.cb-opt.checked{border-color:#1a2744;background:#f0f2f8}
+.cb-opt input{accent-color:#1a2744;width:16px;height:16px}
+.income-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.note-box{background:#fffbf0;border:1px solid #e8d88a;border-radius:8px;padding:12px 14px;font-size:12px;color:#7a6a1a;margin-top:12px;line-height:1.6}
+.children-table{width:100%;border-collapse:collapse;font-size:13px}
+.children-table th{background:#f5f3ee;padding:8px 10px;text-align:right;font-weight:600;color:#555;border-bottom:1px solid #e0ddd6;font-size:12px}
+.children-table td{padding:6px 6px;border-bottom:1px solid #f0ede8}
+.children-table input{border:1px solid #e0ddd6;border-radius:6px;padding:6px 8px;font-size:13px;width:100%;font-family:'Heebo',sans-serif;direction:rtl;background:#fafafa}
+.children-table input:focus{outline:none;border-color:#1a2744;background:white}
+.add-row-btn{margin-top:8px;background:none;border:1px dashed #1a2744;color:#1a2744;padding:7px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:'Heebo',sans-serif}
+.add-row-btn:hover{background:#f0f2f8}
+.rm-btn{background:none;border:none;color:#c0392b;cursor:pointer;font-size:16px;padding:4px;border-radius:4px}
+.changes-table{width:100%;border-collapse:collapse;font-size:13px}
+.changes-table th{background:#f5f3ee;padding:8px 10px;text-align:right;font-weight:600;color:#555;border-bottom:1px solid #e0ddd6;font-size:12px}
+.changes-table td{padding:6px 6px;border-bottom:1px solid #f0ede8}
+.changes-table input{border:1px solid #e0ddd6;border-radius:6px;padding:6px 8px;font-size:13px;width:100%;font-family:'Heebo',sans-serif;direction:rtl}
+.changes-table input:focus{outline:none;border-color:#1a2744}
+.action-bar{position:sticky;bottom:0;background:white;border-top:1px solid #e8e4dc;padding:1rem 2rem;display:flex;gap:12px;align-items:center;box-shadow:0 -4px 20px rgba(0,0,0,0.06);border-radius:0 0 12px 12px}
+.btn-primary{background:#1a2744;color:white;border:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif;display:flex;align-items:center;gap:8px;transition:background 0.15s}
+.btn-primary:hover:not(:disabled){background:#253560}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed}
+.btn-secondary{background:white;color:#1a2744;border:1.5px solid #1a2744;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Heebo',sans-serif}
+.btn-secondary:hover{background:#f0f2f8}
+.declaration-box{background:#f8f5f0;border-right:4px solid #c8a96e;padding:14px 16px;border-radius:0 8px 8px 0;font-size:13px;color:#555;line-height:1.7;margin-bottom:1rem}
+.ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ex-item{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid #e8e4dc;border-radius:8px;font-size:13px;color:#333;cursor:pointer;background:#fafafa}
+.ex-item:hover{border-color:#1a2744;background:#f0f2f8}
+.ex-item.checked{border-color:#1a2744;background:#f0f2f8}
+.ex-item input{accent-color:#1a2744;flex-shrink:0;margin-top:2px}
+.ex-num{font-weight:700;color:#1a2744;font-size:12px;background:#e0e6f5;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.sig-area{border:2px dashed #ccc;border-radius:8px;height:80px;margin-top:8px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;background:#fafafa}
+.status-ok{color:#1a7a4a;font-size:13px;font-weight:500}
+.status-err{color:#c0392b;font-size:13px;font-weight:500}
+.status-warn{color:#c8870a;font-size:13px;font-weight:500}
+.mandatory-border{border:2px solid #c0392b !important;border-radius:8px;margin:0 -2px}
+.year-badge{background:#f5f3ee;border:1px solid #e0ddd6;padding:4px 12px;border-radius:20px;font-size:13px;color:#888;font-weight:500;display:inline-block;margin-bottom:1.5rem}
+</style>
+</head>
+<body>
+<div class="page-bg">
+<div class="container">
+  <div class="header-bar">
+    <div>
+      <div class="header-logo">טופס 101 — כרטיס עובד</div>
+      <div class="header-sub">בקשה להקלה ולתיאום מס על ידי המעסיק</div>
+    </div>
+    <div class="header-badge">שנת מס <span id="yearBadge"></span></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="form-body">
+
+    <div class="section">
+      <div class="year-badge" id="yearNote"></div>
+      <p style="font-size:13px;color:#666;line-height:1.6">טופס זה ימולא על-ידי כל עובד עם תחילת עבודתו. אם חל שינוי בפרטים – יש להצהיר על כך תוך שבוע ימים.</p>
+    </div>
+
+    <!-- א -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">א</div><div><div class="section-title">פרטי המעסיק</div><div class="section-subtitle">ממולא מראש</div></div></div>
+      <div class="field-grid g4">
+        <div class="field"><label>שם המעסיק</label><input id="empName" value="ד.ב ביהס לטניס" readonly></div>
+        <div class="field"><label>כתובת</label><input id="empAddr" value="האירוסים 2, נס ציונה" readonly></div>
+        <div class="field"><label>טלפון</label><input id="empPhone" value="054-4530756" readonly></div>
+        <div class="field"><label>תיק ניכויים</label><input id="empTax" value="926371428" readonly></div>
+      </div>
+    </div>
+
+    <!-- ב -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">ב</div><div><div class="section-title">פרטי העובד/ת</div><div class="section-subtitle">יש לצרף צילום תעודת זהות</div></div></div>
+      <div class="field-grid g4" style="margin-bottom:12px">
+        <div class="field"><label>שם משפחה *</label><input id="lastName" placeholder="שם משפחה"></div>
+        <div class="field"><label>שם פרטי *</label><input id="firstName" placeholder="שם פרטי"></div>
+        <div class="field"><label>מספר זהות * (9 ספרות)</label><input id="idNum" maxlength="9" placeholder="000000000"></div>
+        <div class="field"><label>דרכון (אם אין ת.ז.)</label><input id="passport"></div>
+      </div>
+      <div class="field-grid g4" style="margin-bottom:12px">
+        <div class="field"><label>תאריך לידה</label><input id="birthDate" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this)"></div>
+        <div class="field"><label>תאריך עליה</label><input id="aliyaDate" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this)"></div>
+        <div class="field"><label>טלפון</label><input id="phone"></div>
+        <div class="field"><label>טלפון נייד</label><input id="mobile"></div>
+      </div>
+      <div class="field-grid g3" style="margin-bottom:12px">
+        <div class="field"><label>רחוב / שכונה</label><input id="street"></div>
+        <div class="field"><label>עיר / ישוב</label><input id="city"></div>
+        <div class="field"><label>מיקוד</label><input id="zip" maxlength="7"></div>
+      </div>
+      <div class="field-grid g2" style="margin-bottom:12px">
+        <div class="field"><label>אימייל</label><input id="email" type="email"></div>
+        <div class="field"><label>קופת חולים</label>
+          <div class="radio-group">
+            <label class="radio-opt"><input type="radio" name="kupat" value="no" checked> לא חבר</label>
+            <label class="radio-opt"><input type="radio" name="kupat" value="yes"> כן: <input id="kupahName" style="width:100px;margin-right:6px;padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:12px" placeholder="שם הקופה"></label>
+          </div>
+        </div>
+      </div>
+      <div class="field-grid g3">
+        <div class="field"><label>מין</label>
+          <div class="radio-group">
+            <label class="radio-opt"><input type="radio" name="gender" value="male"> זכר</label>
+            <label class="radio-opt"><input type="radio" name="gender" value="female"> נקבה</label>
+          </div>
+        </div>
+        <div class="field"><label>מצב משפחתי</label>
+          <div class="radio-group">
+            <label class="radio-opt"><input type="radio" name="marital" value="single"> רווק/ה</label>
+            <label class="radio-opt"><input type="radio" name="marital" value="married"> נשוי/אה</label>
+            <label class="radio-opt"><input type="radio" name="marital" value="divorced"> גרוש/ה</label>
+            <label class="radio-opt"><input type="radio" name="marital" value="widowed"> אלמן/ה</label>
+          </div>
+        </div>
+        <div class="field"><label>תושב ישראל</label>
+          <div class="radio-group">
+            <label class="radio-opt"><input type="radio" name="resident" value="yes" checked> כן</label>
+            <label class="radio-opt"><input type="radio" name="resident" value="no"> לא</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ג -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">ג</div><div><div class="section-title">פרטים על ילדיי שבשנת המס טרם מלאו להם 19 שנה</div></div></div>
+      <table class="children-table">
+        <thead><tr><th>שם הילד</th><th>מספר זהות</th><th>תאריך לידה</th><th>בחזקתי</th><th>קצבת ילדים</th><th></th></tr></thead>
+        <tbody id="childrenBody"></tbody>
+      </table>
+      <button class="add-row-btn" onclick="addChild()">+ הוסף ילד</button>
+    </div>
+
+    <!-- ד -->
+    <div class="section" id="sectionD">
+      <div class="section-header"><div class="section-letter">ד</div><div><div class="section-title">פרטים על הכנסותיי ממעסיק זה</div><div class="section-subtitle" style="color:#c0392b;font-weight:500">* חובה</div></div></div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:13px;font-weight:500;color:#555;margin-bottom:8px" id="incomeTypeLabel">אני מקבל/ת:</div>
+        <div class="income-grid" id="incomeTypeGrid"></div>
+      </div>
+      <div class="field" style="max-width:220px">
+        <label id="workStartLabel">תאריך תחילת העבודה בשנת המס *</label>
+        <input id="workStart" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this); clearValidation()">
+      </div>
+    </div>
+
+    <!-- ה -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">ה</div><div><div class="section-title">פרטים על הכנסות אחרות</div></div></div>
+      <div class="radio-group" style="margin-bottom:12px">
+        <label class="radio-opt"><input type="radio" name="otherIncome" value="no" checked onchange="toggleOtherIncome()"> אין לי הכנסות אחרות</label>
+        <label class="radio-opt"><input type="radio" name="otherIncome" value="yes" onchange="toggleOtherIncome()"> יש לי הכנסות אחרות</label>
+      </div>
+      <div id="otherIncomeDetails" style="display:none;flex-direction:column;gap:10px">
+        <div style="font-size:13px;font-weight:500;color:#555">סוג ההכנסה האחרת:</div>
+        <div class="income-grid" id="otherIncomeTypeGrid"></div>
+        <label class="cb-opt" id="cbReqPoints"><input type="checkbox" id="requestPoints"> <span class="ex-num">7</span> אבקש נקודות זיכוי כנגד הכנסה זו</label>
+        <label class="cb-opt" id="cbHasPoints"><input type="checkbox" id="hasPointsElsewhere"> <span class="ex-num">8</span> מקבל/ת נקודות זיכוי בהכנסה האחרת</label>
+        <label class="cb-opt" id="cbNoFund"><input type="checkbox" id="noFundOther"> <span class="ex-num">9</span> אין הפרשות לקרן השתלמות</label>
+        <label class="cb-opt" id="cbNoPension"><input type="checkbox" id="noPensionOther"> <span class="ex-num">10</span> אין הפרשות לקצבה/אובדן כושר</label>
+      </div>
+    </div>
+
+    <!-- ו -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">ו</div><div><div class="section-title">פרטים על בן/בת הזוג</div></div></div>
+      <div class="field-grid g4" style="margin-bottom:12px">
+        <div class="field"><label>מספר זהות</label><input id="spouseId" maxlength="9"></div>
+        <div class="field"><label>שם משפחה</label><input id="spouseLastName"></div>
+        <div class="field"><label>שם פרטי</label><input id="spouseFirstName"></div>
+        <div class="field"><label>תאריך לידה</label><input id="spouseBirth" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this)"></div>
+      </div>
+      <div class="field"><label>הכנסות בן/בת הזוג</label>
+        <div class="radio-group">
+          <label class="radio-opt"><input type="radio" name="spouseIncome" value="none"> אין הכנסה</label>
+          <label class="radio-opt"><input type="radio" name="spouseIncome" value="work"> עבודה/קצבה/עסק</label>
+          <label class="radio-opt"><input type="radio" name="spouseIncome" value="other"> הכנסה אחרת</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ז -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">ז</div><div><div class="section-title">שינויים במהלך השנה</div></div></div>
+      <table class="changes-table">
+        <thead><tr><th>תאריך השינוי</th><th>פרטי השינוי</th><th>תאריך ההודעה</th></tr></thead>
+        <tbody id="changesBody"></tbody>
+      </table>
+      <button class="add-row-btn" onclick="addChange()">+ הוסף שינוי</button>
+    </div>
+
+    <!-- ח -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">ח</div><div><div class="section-title">אני מבקש/ת פטור או זיכוי ממס</div></div></div>
+      <div class="ex-grid" id="exemptionsGrid"></div>
+    </div>
+
+    <!-- ט -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">ט</div><div><div class="section-title">אני מבקש/ת תיאום מס</div></div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+        <label class="cb-opt" id="cbTax1"><input type="checkbox" id="taxReason1"> <span class="ex-num">1</span> לא הייתה לי הכנסה מתחילת שנת המס עד תחילת עבודתי</label>
+        <label class="cb-opt" id="cbTax2"><input type="checkbox" id="taxReason2" onchange="toggleTaxEmployers()"> <span class="ex-num">2</span> יש לי הכנסות נוספות ממשכורת</label>
+        <label class="cb-opt" id="cbTax3"><input type="checkbox" id="taxReason3"> <span class="ex-num">3</span> פקיד השומה אישר תיאום — מצורף אישור</label>
+      </div>
+      <div id="taxEmployersSection" style="display:none">
+        <table class="changes-table">
+          <thead><tr><th>שם המעסיק</th><th>כתובת</th><th>תיק ניכויים</th><th>סוג הכנסה</th><th>הכנסה חודשית</th><th>מס שנוכה</th></tr></thead>
+          <tbody id="taxEmployersBody"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addTaxEmployer()">+ הוסף מעסיק</button>
+      </div>
+    </div>
+
+    <!-- י -->
+    <div class="section">
+      <div class="section-header"><div class="section-letter">י</div><div><div class="section-title">הצהרה וחתימה</div></div></div>
+      <div class="declaration-box">אני מצהיר/ה כי הפרטים שמסרתי בטופס זה הינם מלאים ונכונים. ידוע לי שהשמטה או מסירת פרטים לא נכונים הינה עבירה על פקודת מס הכנסה. אני מתחייב/ת להודיע למעסיק על כל שינוי שיחול בפרטיי האישיים תוך שבוע ימים מתאריך השינוי.</div>
+      <div class="field-grid g2">
+        <div class="field"><label>תאריך</label><input id="signDate" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this)"></div>
+        <div class="field"><label>שם מלא</label><input id="signName" readonly></div>
+      </div>
+      <div style="margin-top:14px"><label style="font-size:12px;font-weight:500;color:#555;display:block;margin-bottom:6px">חתימת העובד/ת (חתימה ידנית לאחר הדפסה)</label>
+        <div class="sig-area">חתום/י כאן לאחר הדפסה</div>
+      </div>
+      <div class="note-box" style="margin-top:14px"><strong>שימו לב:</strong> לחיצה על "שלח טופס" תייצר PDF ותעלה אותו למערכת. תישלח הודעה אוטומטית ל-kippstar@gmail.com.</div>
+    </div>
+
+  </div><!-- form-body -->
+
+  <div class="action-bar">
+    <button class="btn-primary" id="sendBtn" onclick="handleSend()">📨 שלח טופס</button>
+    <div id="statusMsg"></div>
+    <button class="btn-secondary" style="margin-right:auto" onclick="if(confirm('לאפס את כל הנתונים?'))location.reload()">אפס טופס</button>
+  </div>
+</div>
+</div>
+
+<script>
+const CURRENT_YEAR = new Date().getFullYear();
+document.getElementById('yearBadge').textContent = CURRENT_YEAR;
+document.getElementById('yearNote').textContent = `לפי תקנות מס הכנסה (ניכוי ממשכורת ומשכר עבודה), התשנ"ג – 1993`;
+
+// Auto-fill sign name
+['firstName','lastName'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    document.getElementById('signName').value =
+      (document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value).trim();
+  });
+});
+
+// Today's date
+const t = new Date();
+document.getElementById('signDate').value =
+  String(t.getDate()).padStart(2,'0') + '/' + String(t.getMonth()+1).padStart(2,'0') + '/' + t.getFullYear();
+
+// Date format helper
+function formatDateInput(el) {
+  let raw = el.value.replace(/\D/g,'');
+  if(raw.length > 2 && raw.length <= 4) el.value = raw.slice(0,2) + '/' + raw.slice(2);
+  else if(raw.length > 4) el.value = raw.slice(0,2) + '/' + raw.slice(2,4) + '/' + raw.slice(4,8);
+  else el.value = raw;
+}
+
+function fmtDate(d) { return d || '—'; }
+function getRadio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; }
+
+// Income types
+const incomeTypes = [
+  {val:'monthly_salary', label:'משכורת חודש'},
+  {val:'extra_position', label:'משרה נוספת'},
+  {val:'partial_salary', label:'משכורת חלקית'},
+  {val:'daily_wage', label:'שכר עובד יומי'},
+  {val:'pension', label:'קצבה'},
+  {val:'scholarship', label:'מלגה'},
+];
+const iL = {monthly_salary:'משכורת חודש',extra_position:'משרה נוספת',partial_salary:'משכורת חלקית',daily_wage:'שכר עובד יומי',pension:'קצבה',scholarship:'מלגה'};
+
+function buildIncomeGrid(containerId, name) {
+  const grid = document.getElementById(containerId);
+  grid.innerHTML = incomeTypes.map(t =>
+    `<label class="cb-opt" id="cb_${name}_${t.val}">
+      <input type="radio" name="${name}" value="${t.val}" onchange="updateCbClass('${name}','${t.val}','${containerId}')"> ${t.label}
+    </label>`
+  ).join('');
+}
+buildIncomeGrid('incomeTypeGrid','incomeType');
+buildIncomeGrid('otherIncomeTypeGrid','otherIncomeType');
+
+function updateCbClass(name, val, containerId) {
+  document.querySelectorAll(`#${containerId} .cb-opt`).forEach(el => el.classList.remove('checked'));
+  const sel = document.querySelector(`input[name="${name}"][value="${val}"]`);
+  if(sel) sel.closest('.cb-opt').classList.add('checked');
+  clearValidation();
+}
+
+// Children
+let childrenCount = 0;
+function addChild() {
+  const i = childrenCount++;
+  const tr = document.createElement('tr');
+  tr.id = `childRow${i}`;
+  tr.innerHTML = `
+    <td><input id="cName${i}" placeholder="שם מלא"></td>
+    <td><input id="cId${i}" maxlength="9"></td>
+    <td><input id="cBirth${i}" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this)"></td>
+    <td style="text-align:center"><input type="checkbox" id="cCol1_${i}" style="width:18px;height:18px;accent-color:#1a2744"></td>
+    <td style="text-align:center"><input type="checkbox" id="cCol2_${i}" style="width:18px;height:18px;accent-color:#1a2744"></td>
+    <td><button class="rm-btn" onclick="document.getElementById('childRow${i}').remove()">×</button></td>`;
+  document.getElementById('childrenBody').appendChild(tr);
+}
+addChild();
+
+// Changes
+let changesCount = 0;
+function addChange() {
+  const i = changesCount++;
+  const tr = document.createElement('tr');
+  tr.id = `changeRow${i}`;
+  tr.innerHTML = `
+    <td><input id="chDate${i}" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this)"></td>
+    <td><input id="chDetails${i}" placeholder="תיאור השינוי"></td>
+    <td><input id="chNotice${i}" placeholder="dd/mm/yyyy" maxlength="10" oninput="formatDateInput(this)"></td>`;
+  document.getElementById('changesBody').appendChild(tr);
+}
+addChange();
+
+// Exemptions
+const exemptions = [
+  {id:'e1',num:'1',label:'אני תושב/ת ישראל'},
+  {id:'e2a',num:'2א',label:'אני נכה 100% / עיוור/ת לצמיתות'},
+  {id:'e3',num:'3',label:'אני תושב/ת קבוע/ה בישוב מזכה'},
+  {id:'e4',num:'4',label:'אני עולה חדש/ה'},
+  {id:'e5',num:'5',label:'בגין בן/בת זוג ללא הכנסות'},
+  {id:'e6',num:'6',label:'הורה חד הורי החי בנפרד'},
+  {id:'e7',num:'7',label:'נקודות זיכוי בגין ילדים (הורה חד הורי)'},
+  {id:'e8',num:'8',label:'נקודות זיכוי בגין ילדים'},
+  {id:'e9',num:'9',label:'הורה יחיד'},
+  {id:'e10',num:'10',label:'בגין ילדים שאינם בחזקתי'},
+  {id:'e11',num:'11',label:'ילדים עם מוגבלות — מצורף אישור ביטוח לאומי'},
+  {id:'e12',num:'12',label:'מזונות לבן/בת זוג לשעבר — מצורף פסק דין'},
+  {id:'e13',num:'13',label:'גיל 16–18 בשנת המס'},
+  {id:'e14',num:'14',label:'חייל/ת משוחרר/ת / שירות לאומי — מצורף אישור'},
+  {id:'e15',num:'15',label:'סיום לימודים אקדמיים — מצורף טופס 119'},
+  {id:'e16',num:'16',label:'שירות מילואים כלוחם — מצורף אישור מצה"ל'},
+];
+const exGrid = document.getElementById('exemptionsGrid');
+exemptions.forEach(ex => {
+  const lbl = document.createElement('label');
+  lbl.className = 'ex-item';
+  lbl.id = `exItem_${ex.id}`;
+  lbl.innerHTML = `<input type="checkbox" id="${ex.id}" onchange="document.getElementById('exItem_${ex.id}').classList.toggle('checked',this.checked)"> <span class="ex-num">${ex.num}</span> ${ex.label}`;
+  exGrid.appendChild(lbl);
+});
+
+// Tax coord employers
+let taxEmpCount = 0;
+function addTaxEmployer() {
+  const i = taxEmpCount++;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input id="te_name${i}"></td>
+    <td><input id="te_addr${i}"></td>
+    <td><input id="te_tax${i}"></td>
+    <td><input id="te_type${i}" placeholder="משכורת/קצבה"></td>
+    <td><input id="te_inc${i}" placeholder="₪"></td>
+    <td><input id="te_wth${i}" placeholder="₪"></td>`;
+  document.getElementById('taxEmployersBody').appendChild(tr);
+}
+
+function toggleTaxEmployers() {
+  document.getElementById('taxEmployersSection').style.display =
+    document.getElementById('taxReason2').checked ? 'block' : 'none';
+  if(document.getElementById('taxReason2').checked && taxEmpCount === 0) addTaxEmployer();
+}
+
+function toggleOtherIncome() {
+  document.getElementById('otherIncomeDetails').style.display =
+    document.querySelector('input[name="otherIncome"]:checked').value === 'yes' ? 'flex' : 'none';
+}
+
+// Checkbox styles
+document.querySelectorAll('.cb-opt input[type=checkbox]').forEach(cb => {
+  cb.addEventListener('change', () => cb.closest('.cb-opt').classList.toggle('checked', cb.checked));
+});
+
+function clearValidation() {
+  document.getElementById('sectionD').classList.remove('mandatory-border');
+  document.getElementById('statusMsg').innerHTML = '';
+}
+
+// Collect all form data for summary
+function buildFormSummary(firstName, lastName, id) {
+  const mL = {single:'רווק/ה',married:'נשוי/אה',divorced:'גרוש/ה',widowed:'אלמן/ה'};
+  const sI = {none:'אין הכנסה',work:'עבודה/קצבה/עסק',other:'הכנסה אחרת'};
+  const lines = [];
+  lines.push(`א. מעסיק: ד.ב ביהס לטניס | האירוסים 2, נס ציונה | 054-4530756 | תיק: 926371428`);
+  lines.push(`ב. עובד/ת: ${firstName} ${lastName} | ת.ז.: ${id} | ל: ${document.getElementById('birthDate').value||'—'}`);
+  lines.push(`   כתובת: ${document.getElementById('street').value} ${document.getElementById('city').value} ${document.getElementById('zip').value}`);
+  lines.push(`   אימייל: ${document.getElementById('email').value} | טל: ${document.getElementById('mobile').value}`);
+  lines.push(`   מין: ${getRadio('gender')==='male'?'זכר':'נקבה'} | מצב: ${mL[getRadio('marital')]||'—'} | תושב ישראל: ${getRadio('resident')==='yes'?'כן':'לא'}`);
+  // Children
+  const childRows = document.querySelectorAll('#childrenBody tr');
+  const activeChildren = [];
+  childRows.forEach(row => {
+    const nameEl = row.querySelector('input[id^=cName]');
+    if(nameEl && nameEl.value.trim()) {
+      const idEl = row.querySelector('input[id^=cId]');
+      const birthEl = row.querySelector('input[id^=cBirth]');
+      activeChildren.push(`${nameEl.value} (${birthEl?birthEl.value:''})`);
+    }
+  });
+  if(activeChildren.length) lines.push(`ג. ילדים: ${activeChildren.join(', ')}`);
+  lines.push(`ד. סוג הכנסה: ${iL[getRadio('incomeType')]||'—'} | תחילת עבודה: ${document.getElementById('workStart').value}`);
+  lines.push(`ה. הכנסות אחרות: ${getRadio('otherIncome')==='yes'?'כן':'לא'}`);
+  if(document.getElementById('spouseId').value) lines.push(`ו. בן/בת זוג: ${document.getElementById('spouseFirstName').value} ${document.getElementById('spouseLastName').value} | ת.ז.: ${document.getElementById('spouseId').value} | הכנסות: ${sI[getRadio('spouseIncome')]||'—'}`);
+  const activeEx = exemptions.filter(ex => document.getElementById(ex.id) && document.getElementById(ex.id).checked);
+  if(activeEx.length) lines.push(`ח. פטורים/זיכויים: ${activeEx.map(e=>e.label).join(', ')}`);
+  lines.push(`תאריך הגשה: ${document.getElementById('signDate').value}`);
+  return lines.join('\n');
+}
+
+// PDF generation
+async function generatePdfBase64(firstName, lastName, id) {
+  const jsPDFClass = (window.jspdf && window.jspdf.jsPDF) || window.jsPDF; const { jsPDF } = { jsPDF: jsPDFClass };
+  const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const pageW=210, margin=15, colRight=pageW-margin;
+  let y=18;
+  const mL={single:'רווק/ה',married:'נשוי/אה',divorced:'גרוש/ה',widowed:'אלמן/ה'};
+  const sI={none:'אין הכנסה',work:'עבודה/קצבה/עסק',other:'הכנסה אחרת'};
+
+  function chk(){if(y>270){doc.addPage();y=18;}}
+  function addTitle(t){doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(26,39,68);doc.text(t,colRight,y,{align:'right'});y+=7;doc.setDrawColor(200,169,110);doc.setLineWidth(0.8);doc.line(margin,y,colRight,y);y+=6;}
+  function addSec(t){chk();y+=2;doc.setFillColor(235,232,226);doc.rect(margin,y-4.5,pageW-margin*2,7,'F');doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(26,39,68);doc.text(t,colRight,y,{align:'right'});y+=7;}
+  function addRow(l,v){chk();doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(90,90,90);doc.text(l+':',colRight,y,{align:'right'});doc.setFont('helvetica','normal');doc.setTextColor(20,20,20);doc.text(String(v||'—'),colRight-doc.getTextWidth(l+':  '),y,{align:'right'});y+=5.5;}
+  function addLine(t){chk();doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(20,20,20);doc.text(t,colRight,y,{align:'right'});y+=5.5;}
+
+  addTitle(`טופס 101 — כרטיס עובד  |  שנת מס ${CURRENT_YEAR}`);
+  addSec('א. פרטי המעסיק');
+  addRow('שם','ד.ב ביהס לטניס'); addRow('כתובת','האירוסים 2, נס ציונה'); addRow('טלפון','054-4530756'); addRow('תיק ניכויים','926371428');
+  addSec('ב. פרטי העובד/ת');
+  addRow('שם משפחה',document.getElementById('lastName').value);
+  addRow('שם פרטי',document.getElementById('firstName').value);
+  addRow('מספר זהות',id);
+  if(document.getElementById('passport').value) addRow('דרכון',document.getElementById('passport').value);
+  addRow('תאריך לידה',document.getElementById('birthDate').value);
+  if(document.getElementById('aliyaDate').value) addRow('תאריך עליה',document.getElementById('aliyaDate').value);
+  addRow('כתובת',`${document.getElementById('street').value}, ${document.getElementById('city').value} ${document.getElementById('zip').value}`);
+  addRow('אימייל',document.getElementById('email').value);
+  addRow('טלפון',document.getElementById('phone').value);
+  addRow('נייד',document.getElementById('mobile').value);
+  addRow('מין',getRadio('gender')==='male'?'זכר':'נקבה');
+  addRow('מצב משפחתי',mL[getRadio('marital')]||'—');
+  addRow('תושב ישראל',getRadio('resident')==='yes'?'כן':'לא');
+
+  const childRows=document.querySelectorAll('#childrenBody tr');
+  const activeC=[];
+  childRows.forEach(row=>{const n=row.querySelector('input[id^=cName]');if(n&&n.value.trim())activeC.push(row);});
+  if(activeC.length){addSec('ג. ילדים');activeC.forEach(row=>{const n=row.querySelector('input[id^=cName]');const bi=row.querySelector('input[id^=cId]');const bb=row.querySelector('input[id^=cBirth]');const c1=row.querySelector('input[id^=cCol1]');const c2=row.querySelector('input[id^=cCol2]');addLine(`• ${n.value}  ת.ז.: ${bi?bi.value:''}  ל: ${bb?bb.value:''}  בחזקתי: ${c1&&c1.checked?'כן':'לא'}  קצבה: ${c2&&c2.checked?'כן':'לא'}`);});}
+
+  addSec('ד. הכנסות ממעסיק זה');
+  addRow('סוג הכנסה',iL[getRadio('incomeType')]||'—');
+  addRow('תאריך תחילת עבודה',document.getElementById('workStart').value);
+
+  addSec('ה. הכנסות אחרות');
+  addRow('הכנסות אחרות',getRadio('otherIncome')==='yes'?'כן':'לא');
+
+  if(document.getElementById('spouseId').value){addSec('ו. בן/בת הזוג');addRow('שם',`${document.getElementById('spouseFirstName').value} ${document.getElementById('spouseLastName').value}`);addRow('ת.ז.',document.getElementById('spouseId').value);addRow('הכנסות',sI[getRadio('spouseIncome')]||'—');}
+
+  const activeEx=exemptions.filter(ex=>document.getElementById(ex.id)&&document.getElementById(ex.id).checked);
+  if(activeEx.length){addSec('ח. פטור / זיכוי ממס');activeEx.forEach(ex=>addLine(`✓ ${ex.label}`));}
+
+  const t1=document.getElementById('taxReason1').checked;
+  const t2=document.getElementById('taxReason2').checked;
+  const t3=document.getElementById('taxReason3').checked;
+  if(t1||t2||t3){addSec('ט. תיאום מס');if(t1)addLine('✓ לא הייתה הכנסה עד תחילת עבודה');if(t2)addLine('✓ הכנסות נוספות ממשכורת');if(t3)addLine('✓ פקיד השומה אישר תיאום');}
+
+  addSec('י. הצהרה');
+  addRow('תאריך הגשה',document.getElementById('signDate').value);
+  addRow('שם מלא',`${firstName} ${lastName}`);
+  y+=10; addLine('חתימה: _______________________________');
+
+  return doc.output('datauristring').split(',')[1];
+}
+
+// Main send handler
+async function handleSend() {
+  const firstName = document.getElementById('firstName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const id = document.getElementById('idNum').value.trim();
+  const incomeType = getRadio('incomeType');
+  const workStart = document.getElementById('workStart').value.trim();
+  const statusMsg = document.getElementById('statusMsg');
+  const sendBtn = document.getElementById('sendBtn');
+
+  if(!firstName || !lastName) { statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא שם פרטי ושם משפחה</span>'; return; }
+  if(!id) { statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא מספר זהות</span>'; return; }
+  if(!incomeType) {
+    statusMsg.innerHTML = '<span class="status-err">⚠️ יש לבחור סוג הכנסה בסעיף ד</span>';
+    document.getElementById('sectionD').classList.add('mandatory-border');
+    document.getElementById('sectionD').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  if(!workStart) {
+    statusMsg.innerHTML = '<span class="status-err">⚠️ יש למלא תאריך תחילת עבודה בסעיף ד</span>';
+    document.getElementById('sectionD').classList.add('mandatory-border');
+    document.getElementById('sectionD').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = '⏳ מייצר PDF...';
+  statusMsg.innerHTML = '';
+
+  try {
+    const pdfBase64 = await generatePdfBase64(firstName, lastName, id);
+    const filename = `tofes101_${firstName}_${lastName}_${id}.pdf`;
+    const subject = `טופס 101 — ${firstName} ${lastName} | ת.ז. ${id}`;
+    const formSummary = buildFormSummary(firstName, lastName, id);
+
+    sendBtn.textContent = '⏳ שולח...';
+
+    const res = await fetch('/.netlify/functions/submit-form', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ pdfBase64, filename, subject, formSummary, studentName: `${firstName} ${lastName}`, studentId: id })
+    });
+
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'שגיאה בשרת');
+
+    sendBtn.textContent = '✓ נשלח!';
+    sendBtn.style.background = '#1a7a4a';
+    statusMsg.innerHTML = `<span class="status-ok">✓ PDF הועלה ונשלחה הודעה ל-kippstar@gmail.com</span>`;
+
+  } catch(err) {
+    console.error(err);
+    sendBtn.disabled = false;
+    sendBtn.textContent = '📨 שלח טופס';
+    statusMsg.innerHTML = `<span class="status-err">⚠️ שגיאה: ${err.message}</span>`;
+  }
+}
+</script>
+</body>
+</html>
