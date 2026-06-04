@@ -680,13 +680,14 @@ async function generatePdfBase64(firstName, lastName, idNum) {
 
   // תושב ישראל
   const resident = getRadio('resident');
-  if (resident === 'yes') chk(...C.cb.resident_yes);
-  if (resident === 'no')  chk(...C.cb.resident_no);
+  if (resident === 'yes') { setNum(); doc.text('X', ...mm(270.6+3.5, 279.0+3), {align:'center'}); }
+  if (resident === 'no')  { setNum(); doc.text('X', ...mm(248.6+3.5, 279.9+3), {align:'center'}); }
 
   // קופת חולים
   const kupat = document.querySelector('input[name="kupat"]:checked')?.value;
+  if (kupat === 'no')  chk(123.2, 277.2);   // לא — top checkbox
   if (kupat === 'yes') {
-    chk(...C.cb.kupah);
+    chk(123.2, 290.2);                        // כן — bottom checkbox
     const kupahName = document.getElementById('kupahName')?.value || '';
     hebC(kupahName, C.kupah_name.x, C.kupah_name.cy);
   }
