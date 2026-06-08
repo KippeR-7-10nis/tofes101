@@ -98,13 +98,36 @@ input::placeholder{color:#bbb;-webkit-text-fill-color:#bbb;opacity:1}
 input:disabled{color:#888 !important;-webkit-text-fill-color:#888 !important;opacity:0.6;cursor:not-allowed}
 
 /* ── Radio & checkbox ───────────────────────────── */
-.radio-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
-.radio-opt{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:14px;color:#333}
-.radio-opt input{accent-color:#1a2744;width:17px;height:17px;flex-shrink:0}
-.cb-opt{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:#333;padding:8px 12px;border:1px solid #ddd;border-radius:8px;transition:all 0.15s;background:#fafafa}
+.radio-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.radio-opt{
+  display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:#333;
+  padding:8px 12px;border:1px solid #ddd;border-radius:8px;background:#fafafa;
+  min-height:44px;-webkit-tap-highlight-color:transparent;user-select:none;
+  transition:all 0.15s;pointer-events:auto
+}
+.radio-opt:hover{border-color:#1a2744;background:#f0f2f8}
+.radio-opt input[type="radio"]{
+  accent-color:#1a2744;width:18px;height:18px;flex-shrink:0;
+  cursor:pointer;pointer-events:auto;
+  -webkit-appearance:auto !important;
+  appearance:auto !important;
+  margin:0
+}
+.cb-opt{
+  display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#333;
+  padding:10px 12px;border:1px solid #ddd;border-radius:8px;transition:all 0.15s;
+  background:#fafafa;min-height:44px;-webkit-tap-highlight-color:transparent;
+  user-select:none;pointer-events:auto
+}
 .cb-opt:hover{border-color:#1a2744;background:#f0f2f8}
-.cb-opt.checked{border-color:#1a2744;background:#f0f2f8}
-.cb-opt input{accent-color:#1a2744;width:16px;height:16px;flex-shrink:0}
+.cb-opt.checked{border-color:#1a2744;background:#f0f2f8;font-weight:500}
+.cb-opt input[type="checkbox"]{
+  accent-color:#1a2744;width:18px;height:18px;flex-shrink:0;
+  cursor:pointer;pointer-events:auto;
+  -webkit-appearance:auto !important;
+  appearance:auto !important;
+  margin:0
+}
 
 /* ── Income grid ────────────────────────────────── */
 .income-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
